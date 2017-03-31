@@ -1,0 +1,9 @@
+com/ilya/art/config/ArtGalleryAppInit.class
+com/ilya/art/config/DataConfig.class
+com/ilya/art/config/SecurityConfig.class
+com/ilya/art/config/SecurityWebInitalizer.class
+com/ilya/art/webcontrollers/LoginPageController.class
+com/ilya/art/vaadinmodule/AdminPanel$AdminPanelServlet.class
+com/ilya/art/vaadinmodule/AdminPanel.class
+com/ilya/art/webcontrollers/HomePageController.class
+com/ilya/art/config/WebConfig.class
