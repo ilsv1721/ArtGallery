@@ -9,7 +9,7 @@ public class LoginPageController {
 	@RequestMapping(value = { "/login" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public String getHomePage() {
 
-		return "loginpage";
+		return "LoginPage";
 
 	}
 

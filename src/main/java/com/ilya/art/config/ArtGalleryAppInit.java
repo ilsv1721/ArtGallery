@@ -29,13 +29,13 @@ public class ArtGalleryAppInit extends AbstractAnnotationConfigDispatcherServlet
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setMultipartConfig(new MultipartConfigElement("/home/ilya/123/", 2097152, 4194304, 0));
 	}
-	
+
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
-		//Eather move to spring boot or external profile defenition
-		servletContext.setInitParameter("spring.profiles.active", "dev");
+		// Either move to spring boot or external profile defenition
+		//servletContext.setInitParameter("spring.profiles.active", "devServerMySQL");
+		servletContext.setInitParameter("spring.profiles.active", "devEmbed");
 	}
-	
 
 }
