@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+.navbar {
+	background-color: transparent;
+	background: transparent;
+	border-color: transparent;
+}
+
+.navbar .navbar-collapse {
+	text-align: center;
+}
+
+.nav-link {
+	text-decoration: underline;
+}
+
+body {
+	background-attachment: fixed;
+	
+}
+

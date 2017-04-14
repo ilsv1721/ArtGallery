@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- Base Definition -->
+	<definition name="base-definition"
+		template="/WEB-INF/views/tiles/template/defaultTemplate.jsp">
+		<put-attribute name="title" value="" />
+		<put-attribute name="menu"
+			value="/WEB-INF/views/tiles/template/defaultMenu.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="" />
+	</definition>
+
+	<!-- Home Page -->
+	<definition name="HomePage" extends="base-definition">
+		<put-attribute name="title" value="Art" />
+		<put-attribute name="body" value="/WEB-INF/views/jsp/HomePage.jsp" />
+	</definition>
+
+	<!-- Register Page -->
+	<definition name="RegisterPage" extends="base-definition">
+		<put-attribute name="title" value="Register" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/RegisterPage.jsp" />
+	</definition>
+
+	<definition name="LoginPage" extends="base-definition">
+		<put-attribute name="title" value="Login" />
+		<put-attribute name="body" value="/WEB-INF/views/jsp/LoginPage.jsp" />
+	</definition>
+
+	<definition name="ExhibitionsPage" extends="base-definition">
+		<put-attribute name="title" value="Exhibitions" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/ExhibitionsPage.jsp" />
+	</definition>
+
+
+</tiles-definitions>

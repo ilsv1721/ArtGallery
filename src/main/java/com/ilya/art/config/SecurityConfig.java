@@ -36,19 +36,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("USER", "ADMIN").and().withUser("user")
-				.password("user").roles("USER").and().and().jdbcAuthentication().dataSource(dataSource)
-				.passwordEncoder(new BCryptPasswordEncoder()).usersByUsernameQuery(USERS_BY_USERNAME)
-				.authoritiesByUsernameQuery(AUTHS_BY_USERNAME);
+		auth.inMemoryAuthentication().withUser("admin").password("admin").roles("USER", "ADMIN");
+		auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
+		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder())
+				.usersByUsernameQuery(USERS_BY_USERNAME).authoritiesByUsernameQuery(AUTHS_BY_USERNAME);
 
 	}
 
 	@Override
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.formLogin().loginPage("/login").defaultSuccessUrl("/").and().rememberMe().tokenValiditySeconds(2419200)
-				.and().authorizeRequests().antMatchers("/panel/*").authenticated().anyRequest().permitAll().and()
-				.formLogin().and().httpBasic().and().csrf().disable();
+		http.formLogin().loginPage("/login").defaultSuccessUrl("/").and().logout().logoutUrl("/").and().rememberMe()
+				.tokenValiditySeconds(2419200).and().authorizeRequests().antMatchers("/panel/*").authenticated()
+				.anyRequest().permitAll().and().httpBasic();
 
 	}
 

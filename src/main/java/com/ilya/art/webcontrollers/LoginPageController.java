@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoginPageController {
 	@RequestMapping(value = { "/login" }, method = { RequestMethod.GET, RequestMethod.POST })
 	public String getHomePage() {
-
 		return "LoginPage";
 
 	}

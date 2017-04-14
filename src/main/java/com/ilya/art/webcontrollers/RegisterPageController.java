@@ -12,17 +12,15 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ilya.art.domain.Adress;
-import com.ilya.art.domain.BalanceDetails;
 import com.ilya.art.domain.User;
-import com.ilya.art.repositories.dao.UserDao;
+import com.ilya.art.repositories.interfaces.UserDAO;
 
 @Controller
 @RequestMapping(value = "/register")
 public class RegisterPageController {
 
 	@Autowired
-	UserDao userDAO;
+	UserDAO userDAO;
 
 	@RequestMapping(method = GET)
 	public String showRegistrationForm(Model model) {

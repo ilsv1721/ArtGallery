@@ -74,7 +74,7 @@ public class User {
 	private String email;
 
 	@Column(name = "creation_date", updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date creationDate = new Date();
 
 	@Column(name = "last_update", updatable = false, insertable = false)
@@ -85,13 +85,13 @@ public class User {
 	@Column(name = "phone")
 	private String phone;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Adress> adresses = new HashSet<>();
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
 	private BalanceDetails balance;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Adress> paintings = new HashSet<>();
 
 	public Set<Adress> getPaintings() {
@@ -106,7 +106,7 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
-		this.password = password; // REDO
+		this.password = password;
 	}
 
 	public User() {
@@ -236,6 +236,11 @@ public class User {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
 
 }
