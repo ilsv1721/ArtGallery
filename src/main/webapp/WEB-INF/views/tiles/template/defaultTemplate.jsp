@@ -11,12 +11,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title><tiles:getAsString name="title" /></title>
 
-<link href="<c:url value='/resources/css/bootstrap.css' />"
-	rel="stylesheet"></link>
-	
-	
-<link href="<c:url value='/resources/css/w3.css' />"
-	rel="stylesheet"></link>
+<link href="<c:url value='/resources/css/w3.css' />" rel="stylesheet"></link>
 
 <link href="<c:url value='/resources/css/addons.css' />"
 	rel="stylesheet"></link>
@@ -31,7 +26,7 @@
 	</section>
 
 	<section id="site-content"
-		style="padding-top: 45px;">
+		style="padding-top: 30px; padding-left: 10%; padding-right: 10%;">
 		<tiles:insertAttribute name="body" />
 	</section>
 
@@ -40,6 +35,5 @@
 	</footer>
 
 	<script src="/resources/js/jquery-3.2.1.min.js"></script>
-	<script src="/resources/js/bootstrap.min.js"></script>
 </body>
 </html>

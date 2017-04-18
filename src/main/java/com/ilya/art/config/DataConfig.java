@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan(basePackages = { "com.ilya.art.repositories" }, excludeFilters = {
+@ComponentScan(basePackages = { "com.ilya.art.repositories", "com.ilya.art.services" }, excludeFilters = {
 		@Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class),
 		@Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
 @EnableTransactionManagement
@@ -97,7 +97,7 @@ public class DataConfig {
 	 */
 
 	@Bean
-	public PlatformTransactionManager txManager(EntityManagerFactory emf, DataSource dataSource) {
+	public PlatformTransactionManager transactionManager(EntityManagerFactory emf, DataSource dataSource) {
 		JpaTransactionManager jpaTxManager = new JpaTransactionManager();
 		jpaTxManager.setDataSource(dataSource);
 		jpaTxManager.setEntityManagerFactory(emf);

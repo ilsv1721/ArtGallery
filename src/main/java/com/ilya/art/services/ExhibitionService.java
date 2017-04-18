@@ -5,16 +5,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.Exhibition;
-import com.ilya.art.dto.ExhibitiosTitlesFormatted;
+import com.ilya.art.dto.ExhibitionAnnounceDto;
+import com.ilya.art.dto.ExhibitiosTitlesFormattedDto;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
+import com.ilya.art.repositories.interfaces.UserDAO;
 
 @Service
+@Transactional
 public class ExhibitionService implements com.ilya.art.services.interfaces.ExhibitionService {
 
 	@Autowired
 	ExhibitionDao exDao;
+
+	@Autowired
+	UserDAO userDao;
 
 	public void persist(Exhibition entity) {
 		exDao.persist(entity);
@@ -40,14 +47,27 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 		return exDao.findAll();
 	}
 
-	// Not really cool. Ask a question
+	// Use criteria API
 	@Override
-	public List<ExhibitiosTitlesFormatted> getTitlesMeta() {
-		List<ExhibitiosTitlesFormatted> list = new ArrayList<>();
+	public List<ExhibitiosTitlesFormattedDto> getTitlesMeta() {
+		List<ExhibitiosTitlesFormattedDto> list = new ArrayList<>();
 		findAll().forEach((exhibition) -> {
-			list.add(new ExhibitiosTitlesFormatted(exhibition));
+			list.add(new ExhibitiosTitlesFormattedDto(exhibition));
 		});
 		return list;
+	}
+
+	@Override
+	public void anounceNewExhibition(ExhibitionAnnounceDto exhibAnounceDTO) {
+		Exhibition exib = new Exhibition();
+		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()));
+		exib.setDescription(exhibAnounceDTO.getDescription());
+		exib.setStarts(exhibAnounceDTO.getStarts());
+		exib.setEnds(exhibAnounceDTO.getEnds());
+		exib.setTitle(exhibAnounceDTO.getTitle());
+		exhibAnounceDTO = null;
+		exDao.persist(exib);
+
 	}
 
 }

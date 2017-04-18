@@ -5,14 +5,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
 
-
- //REDO
 @Entity
 @Table(name = "roles")
-public class Role {
+@NamedQueries({ @NamedQuery(name = "Role.selectByRole", query = "from Role rl where rl.authority=:in_role") })
+public class Role implements GrantedAuthority {
+
+	private static final long serialVersionUID = -7064789554630714486L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,62 +24,59 @@ public class Role {
 	private int id;
 
 	@Column(name = "role", nullable = false, unique = true)
-	String role;
+	String authority;
 
 	public Role() {
 	}
-	
 
 	public Role(String role) {
-		this.role = role;
+		this.authority = role;
 	}
 
-	protected int getId() {
+	public int getId() {
 		return id;
 	}
 
-	protected void setId(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	protected String getRole() {
-		return role;
+	public String getAuthority() {
+		return authority;
 	}
 
-	protected void setRole(String role) {
-		this.role = role;
+	public void setAuthority(String role) {
+		this.authority = role;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof Role)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		Role other = (Role) obj;
-		if (role == null) {
-			if (other.role != null) {
+		if (authority == null) {
+			if (other.authority != null)
 				return false;
-			}
-		} else if (!role.equals(other.role)) {
+		} else if (!authority.equals(other.authority))
 			return false;
-		}
 		return true;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "Role [authority=" + authority + "]";
+	}
 
 }

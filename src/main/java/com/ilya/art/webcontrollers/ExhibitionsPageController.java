@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ilya.art.dto.ExhibitiosTitlesFormatted.TitleEncoderDecoder;
-import com.ilya.art.services.ExhibitionService;
+import com.ilya.art.dto.ExhibitiosTitlesFormattedDto.TitleEncoderDecoder;
+import com.ilya.art.services.interfaces.ExhibitionService;
 
 @Controller
 @RequestMapping(value = "/exhibitions")

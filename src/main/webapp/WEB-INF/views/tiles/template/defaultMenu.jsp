@@ -1,40 +1,85 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="security"
+	uri="http://www.springframework.org/security/tags"%>
 
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded"
-	style="background-color: #grey;">
+<script>
+	function myFunction() {
+		var x = document.getElementById("demo");
+		if (x.className.indexOf("w3-show") == -1) {
+			x.className += " w3-show";
+		} else {
+			x.className = x.className.replace(" w3-show", "");
+		}
+	}
+</script>
 
-	<button class="navbar-toggler navbar-toggler-right" type="button"
-		data-toggle="collapse" data-target="#navbarSupportedContent"
-		aria-controls="navbarSupportedContent" aria-expanded="false"
-		aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+<div class="w3-bar w3-border w3-light-grey ">
+	<a href="<c:url value="/"/>" class="w3-bar-item w3-button">Home</a> <a
+		href="<c:url value="/exhibitions"/>" class="w3-bar-item w3-button">Exhibitions</a>
 
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
-
-			<li class="nav-item"><a class="nav-link" style="color: black;"
-				href="<c:url value="/"/>">Home</a></li>
+	<a href="<c:url value="/news"/>" class="w3-bar-item w3-button">News</a>
 
 
-			<li class="nav-item"><a class="nav-link" style="color: black;"
-				href="<c:url value="/exhibitions"/>">Exhibitions</a></li>
-		</ul>
-		<form class="form-inline my-2 my-lg-0"
-			action="<c:url value="/search"/>">
-			<input class="form-control mr-sm-2" type="text"
-				placeholder="Search painting">
-			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		</form>
+	<!-- 
+	<div class="w3-dropdown-click w3-right">
 
-		<ul class="nav navbar-nav navbar-right">
+		<button class="w3-button " onclick="myFunction()">Login</button>
 
-			<li class="nav-item"><a class="nav-link" style="color: black;"
-				href="<c:url value="/register"/>">Register</a></li>
+		<div id="demo" class="w3-dropdown-content w3-bar-block w3-card-2"
+			style="right: 0;">
+			<sf:form action="login" method="post">
+				<table style="border: medium;">
+					<tr>
+						<td>Username:</td>
+						<td><input type="text" name="username" value=""></td>
+					</tr>
+					<tr>
+						<td>Password:</td>
+						<td><input type="password" name="password" value=""></td>
+					</tr>
+					<tr>
+						<td>Remember me:</td>
+						<td><input type="checkbox" name="remember-me"
+							id="remember_me"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="submit" name="submit"
+							value="Login" /></td>
+					</tr>
+				</table>
+			</sf:form>
+		</div>
+	</div> -->
 
-			<li class="nav-item"><a class="nav-link" style="color: black;"
-				href="<c:url value="/login"/>">Login</a></li>
+	<security:authorize access="!isAuthenticated()">
+		<a href="<c:url value="/login"/>"
+			class="w3-bar-item w3-button w3-right">Login</a>
+	</security:authorize>
+	
+	<security:authorize access="isAuthenticated()">
+		
+		<div class="w3-dropdown-click w3-right">
 
-		</ul>
+		<button class="w3-button " onclick="myFunction()">Account</button>
+
+		<div id="demo" class="w3-dropdown-content w3-bar-block w3-card-2 w3-light-grey"
+			style="right: 0; z-index: 1000;">
+			<a href="<c:url value="/panel"/>"
+		class="w3-bar-item w3-button w3-right">Panel</a> 
+		<a href="<c:url value="/logout"/>"
+		class="w3-bar-item w3-button w3-right">Logout</a> 
+		</div>
 	</div>
-</nav>
+		
+	</security:authorize>
+
+	<a href="<c:url value="/register"/>"
+		class="w3-bar-item w3-button w3-right">Register</a> <a href="#"
+		class="w3-bar-item w3-button w3-light-blue w3-right">Go</a> <input
+		type="text" class="w3-bar-item w3-input w3-right"
+		placeholder="Search..">
+
+</div>
+
+

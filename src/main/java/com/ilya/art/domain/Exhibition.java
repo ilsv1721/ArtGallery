@@ -56,11 +56,6 @@ public class Exhibition {
 	public Exhibition() {
 	}
 
-	public Exhibition(User announcedBy, String description) {
-		this.announcedBy = announcedBy;
-		this.description = description;
-	}
-
 	public long getId() {
 		return id;
 	}

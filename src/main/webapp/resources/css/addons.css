@@ -14,8 +14,15 @@
 	text-decoration: underline;
 }
 
+.exhibtitle{
+	font-family: serif;
+	font-variant: small-caps;
+	text-align: center;	
+}
+
 body {
 	background-attachment: fixed;
 	
 }
+
 

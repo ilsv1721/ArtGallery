@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   email VARCHAR(70) NOT NULL DEFAULT '',
-  active TINYINT(1) NOT NULL DEFAULT FALSE,
+  active TINYINT(1) NOT NULL DEFAULT TRUE,
   creation_date DATE NOT NULL,
   last_update TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   phone VARCHAR(45) DEFAULT '',
@@ -102,8 +102,7 @@ DROP TABLE IF EXISTS paintings ;
 CREATE TABLE IF NOT EXISTS paintings (
   painting_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   description TEXT NOT NULL,
-  publish_date DATETIME NOT NULL,
-  create_year YEAR NOT NULL,
+  create_date DATE NOT NULL,
   filepath VARCHAR(255) NULL,
   user_id INT UNSIGNED NOT NULL,
   title VARCHAR(70) NOT NULL,
@@ -231,9 +230,10 @@ DROP TABLE IF EXISTS news ;
 
 CREATE TABLE IF NOT EXISTS news (
   news_id INT NOT NULL AUTO_INCREMENT,
-  topic VARCHAR(255) NOT NULL,
-  news TEXT NULL,
+  title VARCHAR(255) NOT NULL unique,
+  content TEXT not NULL,
   user_id INT UNSIGNED NOT NULL,
+publish_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (news_id),
   INDEX fk_news_user_idx (user_id ASC),
   CONSTRAINT fk_news_user
@@ -265,7 +265,17 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Inserts
 -- -----------------------------------------------------
-Insert into users (first_name, last_name, user_password, email, creation_date) values ("John", "Moo", "123", "JohnyThe@King.com","2008-10-03");
+Insert into users (first_name, last_name, user_password, email, creation_date) values ("John", "Moo", "$2a$10$/0LvFCNtEf4StzpxWEQaWOamEQdY43fgiFivrs2iNd3zy1/9VJFVa", "user@manager.com","2008-10-03");
+
+
+insert into roles (role) values ("ROLE_USER");
+insert into roles (role) values ("ROLE_MANAGER");
+insert into roles (role) values ("ROLE_ARTIST");
+insert into roles (role) values ("ROLE_ADMIN");
+
+Insert into user_roles(user_id, role_id) values ("1", "1");
+Insert into user_roles(user_id, role_id) values ("1", "2");
+
 
 Insert into exhibitions (title, description, announced_by, start_date, end_date) values ("The Witcher", "You can choose anyone they said", 1,"2008-10-03","2008-10-03");
 
@@ -281,3 +291,29 @@ Insert into exhibitions (title, description, announced_by, start_date, end_date)
 Insert into exhibitions_images (exhibition_id, path) values (2, "/resources/img/exhibs/TheWitcher2/witcher3art11.jpg");
 
 Insert into exhibitions_images (exhibition_id, path) values (2, "/resources/img/exhibs/TheWitcher2/witcher3art22.jpg");
+
+
+
+insert into news (title, content, user_id, publish_timestamp) values ("The gallery is open now!", "
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porta velit leo. Praesent non tristique est. Morbi efficitur commodo scelerisque. Vestibulum lacinia eu sapien et egestas. Morbi mattis quam sit amet enim aliquet, ut lobortis lectus dignissim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam interdum pulvinar urna sit amet consectetur.
+
+Etiam diam sem, aliquet tempor ex ut, varius ullamcorper eros. Quisque ac fermentum mauris. Nam vestibulum, tortor ac vehicula molestie, felis odio egestas ligula, id ullamcorper arcu quam consequat ante. Quisque vel pharetra eros. Integer varius turpis vel aliquam fermentum. Aliquam sollicitudin, leo eget tempor bibendum, neque massa sodales lectus, eget lobortis lorem dui sed urna. Sed ac erat a ex tempus venenatis vel ac odio. Curabitur gravida nunc augue, sed varius nibh consectetur eget. Integer ullamcorper cursus sem et tristique. Nunc nec suscipit augue. Quisque porta purus quis magna auctor, sed vulputate magna lobortis. Integer ultrices mattis vehicula. Curabitur vestibulum quam hendrerit sem hendrerit, quis dapibus urna feugiat.
+
+Curabitur tristique justo vel ipsum gravida, in maximus tortor blandit. Nam a pellentesque justo. Nam efficitur mauris consequat elit aliquam interdum. Nullam vulputate ligula sit amet facilisis tempor. Sed sed tempor felis. Donec scelerisque orci quis mattis fermentum. Etiam eleifend ante sit amet feugiat fringilla.", 1 , '2016-08-05 18:19:03');
+
+insert into news (title, content, user_id, publish_timestamp) values ("We are on vocation.", "
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porta velit leo. Praesent non tristique est. Morbi efficitur commodo scelerisque. Vestibulum lacinia eu sapien et egestas. Morbi mattis quam sit amet enim aliquet, ut lobortis lectus dignissim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam interdum pulvinar urna sit amet consectetur.
+
+Etiam diam sem, aliquet tempor ex ut, varius ullamcorper eros. Quisque ac fermentum mauris. Nam vestibulum, tortor ac vehicula molestie, felis odio egestas ligula, id ullamcorper arcu quam consequat ante. Quisque vel pharetra eros. Integer varius turpis vel aliquam fermentum. Aliquam sollicitudin, leo eget tempor bibendum, neque massa sodales lectus, eget lobortis lorem dui sed urna. Sed ac erat a ex tempus venenatis vel ac odio. Curabitur gravida nunc augue, sed varius nibh consectetur eget. Integer ullamcorper cursus sem et tristique. Nunc nec suscipit augue. Quisque porta purus quis magna auctor, sed vulputate magna lobortis. Integer ultrices mattis vehicula. Curabitur vestibulum quam hendrerit sem hendrerit, quis dapibus urna feugiat.
+
+Curabitur tristique justo vel ipsum gravida, in maximus tortor blandit. Nam a pellentesque justo. Nam efficitur mauris consequat elit aliquam interdum. Nullam vulputate ligula sit amet facilisis tempor. Sed sed tempor felis. Donec scelerisque orci quis mattis fermentum. Etiam eleifend ante sit amet feugiat fringilla.", 1 , '2016-09-05 18:19:13');
+
+insert into news (title, content, user_id, publish_timestamp) values ("Become a volunteer", "
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque porta velit leo. Praesent non tristique est. Morbi efficitur commodo scelerisque. Vestibulum lacinia eu sapien et egestas. Morbi mattis quam sit amet enim aliquet, ut lobortis lectus dignissim. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam interdum pulvinar urna sit amet consectetur.
+
+Etiam diam sem, aliquet tempor ex ut, varius ullamcorper eros. Quisque ac fermentum mauris. Nam vestibulum, tortor ac vehicula molestie, felis odio egestas ligula, id ullamcorper arcu quam consequat ante. Quisque vel pharetra eros. Integer varius turpis vel aliquam fermentum. Aliquam sollicitudin, leo eget tempor bibendum, neque massa sodales lectus, eget lobortis lorem dui sed urna. Sed ac erat a ex tempus venenatis vel ac odio. Curabitur gravida nunc augue, sed varius nibh consectetur eget. Integer ullamcorper cursus sem et tristique. Nunc nec suscipit augue. Quisque porta purus quis magna auctor, sed vulputate magna lobortis. Integer ultrices mattis vehicula. Curabitur vestibulum quam hendrerit sem hendrerit, quis dapibus urna feugiat.
+
+Curabitur tristique justo vel ipsum gravida, in maximus tortor blandit. Nam a pellentesque justo. Nam efficitur mauris consequat elit aliquam interdum. Nullam vulputate ligula sit amet facilisis tempor. Sed sed tempor felis. Donec scelerisque orci quis mattis fermentum. Etiam eleifend ante sit amet feugiat fringilla.", 1 , '2016-12-21 21:47:03');

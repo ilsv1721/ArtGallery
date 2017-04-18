@@ -12,28 +12,34 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.ilya.art.domain.User;
-import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.dto.UserDetailsDto;
+import com.ilya.art.repositories.interfaces.RoleDao;
+import com.ilya.art.services.interfaces.UserService;
 
 @Controller
 @RequestMapping(value = "/register")
+
 public class RegisterPageController {
 
 	@Autowired
-	UserDAO userDAO;
+	UserService UserService;
+
+	@Autowired
+	RoleDao roleDao;
 
 	@RequestMapping(method = GET)
 	public String showRegistrationForm(Model model) {
-		model.addAttribute(new User());
+		model.addAttribute(new UserDetailsDto());
 		return "RegisterPage";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String processRegistr(HttpServletRequest request, @Valid User user, Errors errors) {
+	public String processRegistr(HttpServletRequest request, @Valid UserDetailsDto userDetailsDto, Errors errors) {
 		if (errors.hasErrors()) {
 			return "RegisterPage";
 		}
-		userDAO.addUser(user);
+
+		UserService.registerNewUser(userDetailsDto);
 		return ("redirect:/");
 
 	}

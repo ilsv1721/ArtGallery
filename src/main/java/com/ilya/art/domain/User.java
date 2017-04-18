@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -23,14 +24,12 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenerationTime;
-
-import com.ilya.art.utils.PasswordConverter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "users")
-@DynamicInsert
+@NamedQueries({ @NamedQuery(name = "User.findbyemail", query = "from User us where us.email = :parem") })
 public class User {
 
 	@Id
@@ -38,38 +37,23 @@ public class User {
 	@Column(name = "user_id")
 	private int id;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@NotNull
-	@Size(min = 1, max = 20, message = "{firstname.size}")
 	@Column(name = "first_name")
 	private String firstName;
 
-	@NotNull
-	@Size(min = 1, max = 20, message = "{password.size}")
+	@Column(name = "active")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private boolean activeStatus;
+
 	@Column(name = "user_password")
-	@Convert(converter = PasswordConverter.class) // REDO THIS 100% (Mb
-	// should not use spring
-	// forms)
 	private String password;
 
-	@NotNull
-	@Size(min = 1, max = 20, message = "{lastname.size}")
 	@Column(name = "last_name")
 	private String lastName;
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@NotNull
-	@Size(min = 1, max = 20, message = "{email.size}") // TODO regex
 	@Column(name = "email")
 	private String email;
 
@@ -93,6 +77,14 @@ public class User {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Adress> paintings = new HashSet<>();
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
 	public Set<Adress> getPaintings() {
 		return paintings;
@@ -241,6 +233,14 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
+	}
+
+	public boolean getActiveStatus() {
+		return activeStatus;
+	}
+
+	public void setActiveStatus(boolean activeStatus) {
+		this.activeStatus = activeStatus;
 	}
 
 }

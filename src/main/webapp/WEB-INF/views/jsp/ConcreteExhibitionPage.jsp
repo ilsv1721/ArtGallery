@@ -24,6 +24,10 @@
 	}
 </script>
 
+
+<h1 class = "exhibtitle">${exhibition.title} <span>by ${exhibition.announcedBy.firstName}
+			${exhibition.announcedBy.lastName}</span></h1>
+
 <table style="width: 100%;">
 
 	<tr>
@@ -44,8 +48,7 @@
 
 
 	<tr>
-		<td>By ${exhibition.announcedBy.firstName}
-			${exhibition.announcedBy.lastName} <br> Start Date:
+		<td style="text-align: center; padding: 20px;"> Start Date:
 			${exhibition.starts} <br> End Date: ${exhibition.ends}
 
 		</td>
@@ -54,7 +57,7 @@
 
 	<tr>
 		<td>
-			<h2>Description</h2> <br>${exhibition.description}</td>
+			<h2 class = "exhibtitle"> Description</h2> <br>${exhibition.description}</td>
 	</tr>
 
 
