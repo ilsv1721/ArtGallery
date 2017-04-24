@@ -40,7 +40,7 @@
 	<definition name="ConcreteExhibitionPage" extends="base-definition">
 		<put-attribute name="title" value="Exhibition" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/ConcreteExhibitionPage.jsp" />
+			value="/WEB-INF/views/jsp/ExhibitionConcretePage.jsp" />
 	</definition>
 
 	<definition name="NewsPage" extends="base-definition">
@@ -52,10 +52,36 @@
 		<put-attribute name="title" value="ControlPanel" />
 		<put-attribute name="body" value="/WEB-INF/views/jsp/PanelPage.jsp" />
 	</definition>
-	
+
 	<definition name="ExhibitionCreationPage" extends="base-definition">
 		<put-attribute name="title" value="ControlPanel" />
-		<put-attribute name="body" value="/WEB-INF/views/jsp/ExhibitionCreationPage.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/ExhibitionCreationPage.jsp" />
+	</definition>
+
+	<definition name="ExhibitionEditionChoosePage" extends="base-definition">
+		<put-attribute name="title"
+			value="Edition panel - Choose entity to edit" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/EditionChoosePage.jsp" />
+	</definition>
+
+	<definition name="ExhibitionEditionPage" extends="base-definition">
+		<put-attribute name="title" value="Editior" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/ExhibitionEditionPage.jsp" />
+	</definition>
+
+	<definition name="NewsEditionPage" extends="base-definition">
+		<put-attribute name="title" value="Editior" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/NewsEditionPage.jsp" />
+	</definition>
+
+	<definition name="NewsCreationPage" extends="base-definition">
+		<put-attribute name="title" value="Creator" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/NewsCreationPage.jsp" />
 	</definition>
 
 

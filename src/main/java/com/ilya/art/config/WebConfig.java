@@ -1,5 +1,8 @@
 package com.ilya.art.config;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +19,7 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = { "com.ilya.art.webcontrollers"})
+@ComponentScan(basePackages = { "com.ilya.art.webcontrollers" })
 
 public class WebConfig extends WebMvcConfigurerAdapter {
 	// static private int INTERNAL_VIEW_RESOLVER_ORDER = 10;
@@ -36,14 +39,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		viewResolver.setOrder(TILES_VIEW_RESOLVER_ORDER);
 		registry.viewResolver(viewResolver);
 	}
-
-	/*
-	 * @Bean public ViewResolver viewResolver() { InternalResourceViewResolver
-	 * resolver = new InternalResourceViewResolver();
-	 * resolver.setPrefix("/WEB-INF/views/jsp/"); resolver.setSuffix(".jsp");
-	 * resolver.setExposeContextBeansAsAttributes(true);
-	 * resolver.setOrder(INTERNAL_VIEW_RESOLVER_ORDER); return resolver; }
-	 */
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
@@ -66,6 +61,16 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/").setCachePeriod(31556926);
 		registry.addResourceHandler("/img/**").addResourceLocations("/resources/img/").setCachePeriod(31556926);
+
+		Properties props = new Properties();
+		try {
+			props.load(this.getClass().getResourceAsStream("/localstorage.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		registry.addResourceHandler("/servimg/**")
+				.addResourceLocations("file:" + props.getProperty("storage.exhibmediastorage"))
+				.setCachePeriod(31556926);
 
 	}
 

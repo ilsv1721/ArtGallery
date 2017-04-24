@@ -38,7 +38,6 @@ public class RegisterPageController {
 		if (errors.hasErrors()) {
 			return "RegisterPage";
 		}
-
 		UserService.registerNewUser(userDetailsDto);
 		return ("redirect:/");
 

@@ -1,25 +1,29 @@
 package com.ilya.art.dto;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExhibitionAnnounceDto {
+import org.springframework.web.multipart.MultipartFile;
 
-	private String title;
-	private String description;
-	private Date starts = new Date();
-	private Date ends = new Date();
+import com.ilya.art.domain.Exhibition;
+
+public class ExhibitionAnnounceDto extends BasicExhibitionDto implements Serializable {
+
+	private static final long serialVersionUID = -4541060973225624238L;
+
 	private String emailAnouncer;
+	private String description;
+	private List<MultipartFile> exhiMedia = new ArrayList<>();
 
 	public ExhibitionAnnounceDto() {
 
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public ExhibitionAnnounceDto(Exhibition exhibition) {
+		super(exhibition);
+		emailAnouncer = exhibition.getAnnouncedBy().getEmail();
+		description = exhibition.getDescription();
 	}
 
 	public String getDescription() {
@@ -30,20 +34,12 @@ public class ExhibitionAnnounceDto {
 		this.description = description;
 	}
 
-	public Date getStarts() {
-		return starts;
+	public List<MultipartFile> getExhiMedia() {
+		return exhiMedia;
 	}
 
-	public void setStarts(Date starts) {
-		this.starts = starts;
-	}
-
-	public Date getEnds() {
-		return ends;
-	}
-
-	public void setEnds(Date ends) {
-		this.ends = ends;
+	public void setExhiMedia(List<MultipartFile> exhiMedia) {
+		this.exhiMedia = exhiMedia;
 	}
 
 	public String getEmailAnouncer() {

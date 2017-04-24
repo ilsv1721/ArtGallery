@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ilya.art.dto.ExhibitiosTitlesFormattedDto.TitleEncoderDecoder;
 import com.ilya.art.services.interfaces.ExhibitionService;
+import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Controller
 @RequestMapping(value = "/exhibitions")
@@ -24,7 +24,8 @@ public class ExhibitionsPageController {
 
 	@RequestMapping(value = "/{exhibFormatedTitle}")
 	public String getConcreteExhibition(Model model, @PathVariable String exhibFormatedTitle) {
-		model.addAttribute("exhibition", exServ.findExhibition(TitleEncoderDecoder.decode(exhibFormatedTitle)));
+		model.addAttribute("exhibition",
+				exServ.findExhibition(SimpleStringURLEncoderDecoder.decode(exhibFormatedTitle)));
 		return "ConcreteExhibitionPage";
 	}
 

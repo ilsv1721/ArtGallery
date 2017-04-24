@@ -1,21 +1,39 @@
 package com.ilya.art.services;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ilya.art.config.utils.LocalStorageProps;
 import com.ilya.art.domain.Exhibition;
+import com.ilya.art.domain.ExhibitionImages;
 import com.ilya.art.dto.ExhibitionAnnounceDto;
-import com.ilya.art.dto.ExhibitiosTitlesFormattedDto;
+import com.ilya.art.dto.ExhibitionEditionDto;
+import com.ilya.art.dto.UrlChosserAssistantMatcher;
+import com.ilya.art.dto.converters.ExhibitionDtoEntityConverters;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Service
 @Transactional
 public class ExhibitionService implements com.ilya.art.services.interfaces.ExhibitionService {
+
+	@Autowired
+	LocalStorageProps localStorageProps;
 
 	@Autowired
 	ExhibitionDao exDao;
@@ -47,26 +65,65 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 		return exDao.findAll();
 	}
 
-	// Use criteria API
 	@Override
-	public List<ExhibitiosTitlesFormattedDto> getTitlesMeta() {
-		List<ExhibitiosTitlesFormattedDto> list = new ArrayList<>();
+	public List<UrlChosserAssistantMatcher> getTitlesMeta() {
+		List<UrlChosserAssistantMatcher> list = new ArrayList<>();
 		findAll().forEach((exhibition) -> {
-			list.add(new ExhibitiosTitlesFormattedDto(exhibition));
+			list.add(new UrlChosserAssistantMatcher(exhibition.getTitle()));
 		});
 		return list;
 	}
 
 	@Override
 	public void anounceNewExhibition(ExhibitionAnnounceDto exhibAnounceDTO) {
-		Exhibition exib = new Exhibition();
-		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()));
-		exib.setDescription(exhibAnounceDTO.getDescription());
-		exib.setStarts(exhibAnounceDTO.getStarts());
-		exib.setEnds(exhibAnounceDTO.getEnds());
-		exib.setTitle(exhibAnounceDTO.getTitle());
-		exhibAnounceDTO = null;
+		Exhibition exib = ExhibitionDtoEntityConverters.convert(exhibAnounceDTO,
+				userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()), localStorageProps.getLocalStoragePathExhibs());
 		exDao.persist(exib);
+	}
+
+	@Override
+	public void editExhibition(ExhibitionEditionDto exhibitionDto) {
+		Exhibition exib = ExhibitionDtoEntityConverters.convert(exhibitionDto,
+				userDao.findByEmail(exhibitionDto.getEmailAnouncer()), localStorageProps.getLocalStoragePathExhibs());
+
+		exDao.merge(exib);
+
+	}
+
+	@Override
+	public ExhibitionEditionDto getExhibitionEditionDto(String title) {
+		return new ExhibitionEditionDto(this.findExhibition(title));
+
+	}
+
+	@Override
+	public ExhibitionEditionDto getExhibitionEditionDto(Long id) {
+		return new ExhibitionEditionDto(this.findById(id));
+	}
+
+	@Override
+	public void deleteExhibition(Long id) {
+		Exhibition exhib = exDao.findById(id);
+		Path directory = Paths.get(localStorageProps.getLocalStoragePathExhibs() + File.separator
+				+ SimpleStringURLEncoderDecoder.decode(exhib.getTitle()));
+		try {
+			Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+					Files.delete(file);
+					return FileVisitResult.CONTINUE;
+				}
+
+				@Override
+				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+					Files.delete(dir);
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		exDao.remove(exhib);
 
 	}
 

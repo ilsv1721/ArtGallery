@@ -24,12 +24,26 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.ilya.art.config.utils.LocalStorageProps;
+
 @Configuration
 @ComponentScan(basePackages = { "com.ilya.art.repositories", "com.ilya.art.services" }, excludeFilters = {
 		@Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class),
 		@Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
 @EnableTransactionManagement
 public class DataConfig {
+
+	@Bean
+	LocalStorageProps localStorageProps() {
+		Properties props = new Properties();
+		try {
+			props.load(this.getClass().getResourceAsStream("/localstorage.properties"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		LocalStorageProps localStorageProps = new LocalStorageProps(props.getProperty("storage.exhibmediastorage"));
+		return localStorageProps;
+	}
 
 	@Bean
 	@Profile(value = { "devEmbed" })
@@ -68,33 +82,6 @@ public class DataConfig {
 		adapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
 		return adapter;
 	}
-
-	/*
-	 * @Bean
-	 * 
-	 * @Profile(value = { "devServerMySQL" }) public LocalSessionFactoryBean
-	 * sessionFactoryMySQL(DataSource dataSourceSQL) { LocalSessionFactoryBean
-	 * sfb = new LocalSessionFactoryBean(); sfb.setDataSource(dataSourceSQL);
-	 * sfb.setPackagesToScan(new String[] { "com.ilya.art.domain" }); Properties
-	 * props = new Properties(); props.setProperty("hibernate.dialect",
-	 * "org.hibernate.dialect.MySQLDialect"); sfb.setHibernateProperties(props);
-	 * return sfb;
-	 * 
-	 * }
-	 * 
-	 * @Bean
-	 * 
-	 * @Profile(value = { "devEmbed" }) public LocalSessionFactoryBean
-	 * sessionFactoryEmbedded(DataSource dataSource) { LocalSessionFactoryBean
-	 * sfb = new LocalSessionFactoryBean(); sfb.setDataSource(dataSource);
-	 * sfb.setPackagesToScan(new String[] { "com.ilya.art.domain" }); Properties
-	 * props = new Properties(); props.setProperty("hibernate.dialect",
-	 * "org.hibernate.dialect.H2Dialect"); sfb.setHibernateProperties(props);
-	 * return sfb;
-	 * 
-	 * }
-	 * 
-	 */
 
 	@Bean
 	public PlatformTransactionManager transactionManager(EntityManagerFactory emf, DataSource dataSource) {
