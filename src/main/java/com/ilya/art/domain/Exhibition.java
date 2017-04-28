@@ -53,6 +53,9 @@ public class Exhibition {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "exhibition", fetch = FetchType.EAGER)
 	private Set<ExhibitionImages> exhibitionImages = new HashSet<>();
 
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "exhibition")
+	private Set<Painting> paintings = new HashSet<>();
+
 	public Exhibition() {
 	}
 
@@ -102,6 +105,14 @@ public class Exhibition {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public Set<Painting> getPaintings() {
+		return paintings;
+	}
+
+	public void setPaintings(Set<Painting> paintings) {
+		this.paintings = paintings;
 	}
 
 	@Override

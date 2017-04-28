@@ -77,7 +77,7 @@ public class User {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Adress> paintings = new HashSet<>();
-
+	
 	public String getPassword() {
 		return password;
 	}

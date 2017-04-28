@@ -26,15 +26,18 @@ public abstract class ExhibitionDtoEntityConverters {
 		if (!exhibAnounceDTO.getExhiMedia().isEmpty()) {
 			for (MultipartFile media : exhibAnounceDTO.getExhiMedia()) {
 				String ultPath = Integer.toString(media.hashCode());
+				
 				StringBuilder sb = new StringBuilder();
 				sb.append(SimpleStringURLEncoderDecoder.encode(File.separator + exhibAnounceDTO.getTitle())
 						+ File.separator);
+				
 				int i = 0;
 
 				for (i = 0; i < ultPath.length() - 2; i = i + 2) {
 					sb.append(ultPath.substring(i, i + 2));
 					sb.append(File.separator);
 				}
+				
 
 				new File(prefix + sb.toString()).mkdirs();
 

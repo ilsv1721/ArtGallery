@@ -6,21 +6,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ilya.art.dto.ExhibitionAnnounceDto;
 import com.ilya.art.dto.ExhibitionEditionDto;
 import com.ilya.art.dto.NewsDto;
 import com.ilya.art.services.interfaces.ExhibitionService;
@@ -33,7 +29,7 @@ public class PanelController {
 
 	@Autowired
 	ExhibitionService exhibitionService;
-
+	
 	@Autowired
 	NewsService newsService;
 
@@ -91,7 +87,6 @@ public class PanelController {
 
 	@RequestMapping(value = "/deletion/del", method = RequestMethod.POST)
 	public @ResponseBody String deleteExhib(@RequestParam long srcId, @RequestParam String srcType) {
-
 		switch (srcType) {
 		case "exhib":
 			exhibitionService.deleteExhibition(srcId);

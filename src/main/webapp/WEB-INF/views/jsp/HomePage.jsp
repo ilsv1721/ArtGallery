@@ -10,8 +10,7 @@
 	style="max-height: 70%; width: 100%;">
 
 	<div class="w3-display-container mySlides">
-		<img
-			src="https://wallpaperscraft.com/image/triangle_light_blurred_88541_1366x768.jpg"
+		<img src=' <c:url value="/resources/img/home1.jpg"/> '
 			style="width: 100%">
 		<div
 			class="w3-display-topleft w3-large w3-container w3-padding-16 w3-black"
@@ -20,8 +19,7 @@
 	</div>
 
 	<div class="w3-display-container mySlides">
-		<img
-			src="http://www.mrwallpaper.com/wallpapers/Winter-Lake-1366x768.jpg"
+		<img src="  <c:url value="/resources/img/home1.jpg"/>"
 			style="width: 100%">
 		<div
 			class="w3-display-topmiddle w3-large w3-container w3-padding-16 w3-black"

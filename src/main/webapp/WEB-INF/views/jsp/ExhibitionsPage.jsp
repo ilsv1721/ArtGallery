@@ -16,8 +16,8 @@
 		<c:forEach items="${exhibitionsList}" var="exhibition">
 			<tr>
 				<td><a
-					href='<c:url context="/art/exhibitions" value="/${exhibition.formattedTitle}"/>'><c:out
-							value="${exhibition.title}" /></a></td>
+					href='<c:url context="/art/exhibitions" value="/${exhibition.formatted}"/>'><c:out
+							value="${exhibition.raw}" /></a></td>
 			</tr>
 		</c:forEach>
 	</table>

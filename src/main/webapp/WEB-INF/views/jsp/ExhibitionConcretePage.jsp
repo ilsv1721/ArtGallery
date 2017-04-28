@@ -37,7 +37,7 @@
 				style="max-width: 900px;">
 				<c:forEach items="${exhibition.exhibitionImages}" var="mediaImage">
 					<img
-						src="<c:url value="${mediaImage.path}" context="/art/servimg"/>"
+						src="<c:url value="/${mediaImage.path}" context="/art/servimg"/>"
 						class="mySlides w3-image" />
 				</c:forEach>
 				<button class="w3-button w3-display-left w3-black"

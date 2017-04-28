@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,19 @@ import com.ilya.art.domain.ExhibitionImages;
 import com.ilya.art.dto.ExhibitionAnnounceDto;
 import com.ilya.art.dto.ExhibitionEditionDto;
 import com.ilya.art.dto.UrlChosserAssistantMatcher;
+import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 import com.ilya.art.dto.converters.ExhibitionDtoEntityConverters;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.UserDAO;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
+import com.ilya.art.utils.files.HashCodePathFileAssistant;
+import com.ilya.art.utils.files.PathAndFileAssistant;
 
 @Service
 @Transactional
 public class ExhibitionService implements com.ilya.art.services.interfaces.ExhibitionService {
+
+	PathAndFileAssistant<MultipartFile> pathAndFileAssistant = new HashCodePathFileAssistant(2);
 
 	@Autowired
 	LocalStorageProps localStorageProps;
@@ -76,8 +80,24 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 
 	@Override
 	public void anounceNewExhibition(ExhibitionAnnounceDto exhibAnounceDTO) {
-		Exhibition exib = ExhibitionDtoEntityConverters.convert(exhibAnounceDTO,
-				userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()), localStorageProps.getLocalStoragePathExhibs());
+
+		Exhibition exib = new Exhibition();
+		exib.setDescription(exhibAnounceDTO.getDescription());
+		exib.setTitle(exhibAnounceDTO.getTitle());
+		exib.setStarts(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getStartDate()));
+		exib.setEnds(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getEndDate()));
+		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()));
+		String prefix = localStorageProps.getLocalStoragePathExhibs() + File.separator + exhibAnounceDTO.getTitle()
+				+ File.separator;
+		for (MultipartFile resource : exhibAnounceDTO.getExhiMedia()) {
+			try {
+				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
+				pathAndFileAssistant.saveToFile(prefix, path, resource);
+				exib.getExhibitionImages().add(new ExhibitionImages(path.getPathToFile() + path.getFilename(), exib));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		exDao.persist(exib);
 	}
 

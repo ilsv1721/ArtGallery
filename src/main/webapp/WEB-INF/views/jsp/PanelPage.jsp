@@ -16,3 +16,7 @@
 		class="w3-button">Edit News</a>
 </security:authorize>
 
+<security:authorize access="hasRole('ROLE_ADMIN')">
+<a href="<c:url context ="/art/panel" value="/exhibcreator"/>"
+		class="w3-button">Edit user data</a>
+</security:authorize>
