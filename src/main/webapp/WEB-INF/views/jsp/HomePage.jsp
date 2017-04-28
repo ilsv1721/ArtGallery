@@ -19,12 +19,21 @@
 	</div>
 
 	<div class="w3-display-container mySlides">
-		<img src="  <c:url value="/resources/img/home1.jpg"/>"
+		<img src="  <c:url value="/resources/img/home2.jpg"/>"
 			style="width: 100%">
 		<div
 			class="w3-display-topmiddle w3-large w3-container w3-padding-16 w3-black"
 			style="font-variant: small-caps;">Visit our web-gallery</div>
 	</div>
+	
+	<div class="w3-display-container mySlides">
+		<img src="  <c:url value="/resources/img/home3.jpg"/>"
+			style="width: 100%">
+		<div
+			class="w3-display-topright w3-large w3-container w3-padding-16 w3-black"
+			style="font-variant: small-caps;">And check  auctions</div>
+	</div>
+	
 
 	<div
 		class="w3-center w3-container w3-section w3-large w3-text-white w3-display-middle"

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,9 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "paintings")
@@ -24,42 +24,53 @@ public class Painting {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "painting_id")
-	private int id;
+	private long id;
+
+	@Column(name = "filepath")
+	private String path;
 
 	@Column(name = "description")
 	private String description;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "create_date")
-	private Date createDate = new Date();
-
-	@Column(name = "filepath")
-	private String filepath;
-
 	@Column(name = "title")
 	private String title;
 
+	@Column(name = "create_date")
+	private Date creationdate;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User creator;
+	private User author;
 
-	@ManyToOne
-	@JoinColumn(name = "exhibition_id")
-	private Exhibition exhibition;
-
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "paintings_genres", joinColumns = @JoinColumn(name = "painting_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
-	private Set<Genre> genres = new HashSet<>();
+	private Set<Genre> genre = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "paintings_exhibition", joinColumns = @JoinColumn(name = "painting_id"), inverseJoinColumns = @JoinColumn(name = "exhibition_id"))
+	private Set<Genre> exhibitions = new HashSet<>();
 
 	public Painting() {
 	}
 
-	public int getId() {
+	public Painting(String path) {
+		this.path = path;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public String getDescription() {
@@ -70,22 +81,6 @@ public class Painting {
 		this.description = description;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getFilepath() {
-		return filepath;
-	}
-
-	public void setFilepath(String filepath) {
-		this.filepath = filepath;
-	}
-
 	public String getTitle() {
 		return title;
 	}
@@ -94,29 +89,28 @@ public class Painting {
 		this.title = title;
 	}
 
-	public User getCreator() {
-		return creator;
+	public Date getCreationdate() {
+		return creationdate;
 	}
 
-	public void setCreator(User creator) {
-		this.creator = creator;
+	public void setCreationdate(Date creationdate) {
+		this.creationdate = creationdate;
 	}
 
-	public Exhibition getExhibition() {
-		return exhibition;
+	public User getAuthor() {
+		return author;
 	}
 
-	public void setExhibition(Exhibition exhibition) {
-		this.exhibition = exhibition;
+	public void setAuthor(User author) {
+		this.author = author;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
-		result = prime * result + ((exhibition == null) ? 0 : exhibition.hashCode());
-		result = prime * result + ((filepath == null) ? 0 : filepath.hashCode());
+		result = prime * result + ((creationdate == null) ? 0 : creationdate.hashCode());
+		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
@@ -130,20 +124,15 @@ public class Painting {
 		if (getClass() != obj.getClass())
 			return false;
 		Painting other = (Painting) obj;
-		if (createDate == null) {
-			if (other.createDate != null)
+		if (creationdate == null) {
+			if (other.creationdate != null)
 				return false;
-		} else if (!createDate.equals(other.createDate))
+		} else if (!creationdate.equals(other.creationdate))
 			return false;
-		if (exhibition == null) {
-			if (other.exhibition != null)
+		if (path == null) {
+			if (other.path != null)
 				return false;
-		} else if (!exhibition.equals(other.exhibition))
-			return false;
-		if (filepath == null) {
-			if (other.filepath != null)
-				return false;
-		} else if (!filepath.equals(other.filepath))
+		} else if (!path.equals(other.path))
 			return false;
 		if (title == null) {
 			if (other.title != null)

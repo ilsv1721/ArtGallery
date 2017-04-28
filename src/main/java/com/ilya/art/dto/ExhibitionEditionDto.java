@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ilya.art.domain.Exhibition;
-import com.ilya.art.domain.ExhibitionImages;
+import com.ilya.art.domain.Painting;
 
 public class ExhibitionEditionDto extends ExhibitionAnnounceDto implements Serializable {
 
@@ -21,7 +21,7 @@ public class ExhibitionEditionDto extends ExhibitionAnnounceDto implements Seria
 	public ExhibitionEditionDto(Exhibition exhibition) {
 		super(exhibition);
 		this.id = exhibition.getId();
-		for (ExhibitionImages exIm : exhibition.getExhibitionImages()) {
+		for (Painting exIm : exhibition.getPaintings()) {
 			relativePathToMedia.add(exIm.getPath());
 		}
 	}

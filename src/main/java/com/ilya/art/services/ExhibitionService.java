@@ -18,12 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ilya.art.config.utils.LocalStorageProps;
 import com.ilya.art.domain.Exhibition;
-import com.ilya.art.domain.ExhibitionImages;
+import com.ilya.art.domain.Painting;
 import com.ilya.art.dto.ExhibitionAnnounceDto;
 import com.ilya.art.dto.ExhibitionEditionDto;
 import com.ilya.art.dto.UrlChosserAssistantMatcher;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
-import com.ilya.art.dto.converters.ExhibitionDtoEntityConverters;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.UserDAO;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
@@ -93,7 +92,7 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 			try {
 				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
 				pathAndFileAssistant.saveToFile(prefix, path, resource);
-				exib.getExhibitionImages().add(new ExhibitionImages(path.getPathToFile() + path.getFilename(), exib));
+				exib.getPaintings().add(new Painting(path.getPathToFile() + path.getFilename()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -103,10 +102,6 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 
 	@Override
 	public void editExhibition(ExhibitionEditionDto exhibitionDto) {
-		Exhibition exib = ExhibitionDtoEntityConverters.convert(exhibitionDto,
-				userDao.findByEmail(exhibitionDto.getEmailAnouncer()), localStorageProps.getLocalStoragePathExhibs());
-
-		exDao.merge(exib);
 
 	}
 

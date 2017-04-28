@@ -35,7 +35,7 @@
 	<tr>
 		<td><div class="w3-content w3-display-container"
 				style="max-width: 900px;">
-				<c:forEach items="${exhibition.exhibitionImages}" var="mediaImage">
+				<c:forEach items="${exhibition.paintings}" var="mediaImage">
 					<img
 						src="<c:url value="/${mediaImage.path}" context="/art/servimg"/>"
 						class="mySlides w3-image" />

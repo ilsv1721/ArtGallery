@@ -3,21 +3,19 @@ package com.ilya.art.domain;
 import java.util.Date;
 
 public class Auction {
-		
+
 	private int id;
-	
+
 	private Date starts = new Date();
 
 	private Date ends = new Date();
-	
+
 	private double intialprice;
-	
+
 	private double buyOutPrice;
-	
-	private Painting painting;
-	
+
 	private double soldFor;
-	
+
 	public Auction() {
 	}
 
@@ -61,14 +59,6 @@ public class Auction {
 		this.buyOutPrice = buyOutPrice;
 	}
 
-	public Painting getPainting() {
-		return painting;
-	}
-
-	public void setPainting(Painting painting) {
-		this.painting = painting;
-	}
-
 	public double getSoldFor() {
 		return soldFor;
 	}
@@ -76,9 +66,5 @@ public class Auction {
 	public void setSoldFor(double soldFor) {
 		this.soldFor = soldFor;
 	}
-	
-	
-	
-	
 
 }

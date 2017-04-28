@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -50,11 +52,9 @@ public class Exhibition {
 	@JoinColumn(name = "announced_by")
 	private User announcedBy;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "exhibition", fetch = FetchType.EAGER)
-	private Set<ExhibitionImages> exhibitionImages = new HashSet<>();
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "exhibition")
-	private Set<Painting> paintings = new HashSet<>();
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "paintings_exhibition", joinColumns = @JoinColumn(name = "exhibition_id"), inverseJoinColumns = @JoinColumn(name = "painting_id"))
+	private Set<Painting> Paintings = new HashSet<>();
 
 	public Exhibition() {
 	}
@@ -107,14 +107,6 @@ public class Exhibition {
 		this.title = title;
 	}
 
-	public Set<Painting> getPaintings() {
-		return paintings;
-	}
-
-	public void setPaintings(Set<Painting> paintings) {
-		this.paintings = paintings;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -146,12 +138,12 @@ public class Exhibition {
 		return true;
 	}
 
-	public Set<ExhibitionImages> getExhibitionImages() {
-		return exhibitionImages;
+	public Set<Painting> getPaintings() {
+		return Paintings;
 	}
 
-	public void setExhibitionImages(Set<ExhibitionImages> exhibitionImages) {
-		this.exhibitionImages = exhibitionImages;
+	public void setPaintings(Set<Painting> paintings) {
+		Paintings = paintings;
 	}
 
 }
