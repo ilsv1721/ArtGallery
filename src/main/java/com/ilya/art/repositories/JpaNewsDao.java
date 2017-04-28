@@ -8,7 +8,6 @@ import com.ilya.art.domain.News;
 import com.ilya.art.repositories.interfaces.NewsDao;
 
 @Repository
-// Move to Criteria API
 public class JpaNewsDao extends JpaDao<News, Long> implements NewsDao {
 
 	@Override

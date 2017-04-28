@@ -18,7 +18,7 @@ public class ExhibitionsPageController {
 
 	@RequestMapping
 	public String deafaultExhibitionsPage(Model model) {
-		model.addAttribute("exhibitionsList", exServ.getTitlesMeta());
+		model.addAttribute("exhibitionsList", exServ.getUrlEntityFieldAssistantMatchers());
 		return "ExhibitionsPage";
 	}
 

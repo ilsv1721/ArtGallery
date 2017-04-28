@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.News;
 import com.ilya.art.dto.NewsDto;
-import com.ilya.art.dto.UrlChosserAssistantMatcher;
 import com.ilya.art.dto.converters.NewsDtoToNews;
 import com.ilya.art.repositories.interfaces.NewsDao;
 import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.utils.web.UrlEntityFieldAssistantMatcher;
 
 @Service
 @Transactional
@@ -75,17 +75,17 @@ public class NewsService implements com.ilya.art.services.interfaces.NewsService
 	}
 
 	@Override
-	public List<UrlChosserAssistantMatcher> getNewsURLd() {
-		List<UrlChosserAssistantMatcher> list = new ArrayList<>();
-		getDescOrderedNews().forEach((news) -> {
-			list.add(new UrlChosserAssistantMatcher(Long.toString(news.getId())));
-		});
-		return list;
+	public NewsDto getNewsAsNewsDtoById(long id) {
+		return new NewsDto(findById(id));
 	}
 
 	@Override
-	public NewsDto getNewsAsNewsDtoById(long id) {
-		return new NewsDto(findById(id));
+	public List<UrlEntityFieldAssistantMatcher> getUrlEntityFieldAssistantMatchers() {
+		List<UrlEntityFieldAssistantMatcher> list = new ArrayList<>();
+		getDescOrderedNews().forEach((news) -> {
+			list.add(new UrlEntityFieldAssistantMatcher(news.getTitle(), Long.toString(news.getId())));
+		});
+		return list;
 	}
 
 }

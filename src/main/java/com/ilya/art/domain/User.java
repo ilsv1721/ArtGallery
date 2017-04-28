@@ -21,8 +21,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.Type;
@@ -77,7 +75,7 @@ public class User {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	private Set<Adress> paintings = new HashSet<>();
-	
+
 	public String getPassword() {
 		return password;
 	}

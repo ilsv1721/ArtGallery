@@ -21,13 +21,13 @@ import com.ilya.art.domain.Exhibition;
 import com.ilya.art.domain.Painting;
 import com.ilya.art.dto.ExhibitionAnnounceDto;
 import com.ilya.art.dto.ExhibitionEditionDto;
-import com.ilya.art.dto.UrlChosserAssistantMatcher;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.UserDAO;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 import com.ilya.art.utils.files.HashCodePathFileAssistant;
 import com.ilya.art.utils.files.PathAndFileAssistant;
+import com.ilya.art.utils.web.UrlEntityFieldAssistantMatcher;
 
 @Service
 @Transactional
@@ -69,10 +69,10 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 	}
 
 	@Override
-	public List<UrlChosserAssistantMatcher> getTitlesMeta() {
-		List<UrlChosserAssistantMatcher> list = new ArrayList<>();
+	public List<UrlEntityFieldAssistantMatcher> getUrlEntityFieldAssistantMatchers() {
+		List<UrlEntityFieldAssistantMatcher> list = new ArrayList<>();
 		findAll().forEach((exhibition) -> {
-			list.add(new UrlChosserAssistantMatcher(exhibition.getTitle()));
+			list.add(new UrlEntityFieldAssistantMatcher(exhibition.getTitle()));
 		});
 		return list;
 	}

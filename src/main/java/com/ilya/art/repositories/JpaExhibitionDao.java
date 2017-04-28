@@ -20,5 +20,5 @@ public class JpaExhibitionDao extends JpaDao<Exhibition, Long> implements Exhibi
 	public List<Exhibition> findAll() {
 		return entityManager.createNamedQuery("Exhibition.findAll", Exhibition.class).getResultList();
 	}
-
+	
 }

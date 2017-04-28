@@ -29,7 +29,7 @@ public class PanelController {
 
 	@Autowired
 	ExhibitionService exhibitionService;
-	
+
 	@Autowired
 	NewsService newsService;
 
@@ -57,11 +57,11 @@ public class PanelController {
 
 		switch (lookfor) {
 		case "exhib":
-			model.addAttribute("srcList", exhibitionService.getTitlesMeta());
+			model.addAttribute("srcList", exhibitionService.getUrlEntityFieldAssistantMatchers());
 			request.setAttribute("srcType", "exhibeditor");
 			break;
 		case "news":
-			model.addAttribute("srcList", newsService.getNewsURLd());
+			model.addAttribute("srcList", newsService.getUrlEntityFieldAssistantMatchers());
 			request.setAttribute("srcType", "newseditor");
 			break;
 		}
