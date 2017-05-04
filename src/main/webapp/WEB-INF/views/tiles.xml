@@ -84,5 +84,18 @@
 			value="/WEB-INF/views/jsp/NewsCreationPage.jsp" />
 	</definition>
 
+	<definition name="RandomPaintingPage" extends="base-definition">
+		<put-attribute name="title" value="RandomPainting" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/RandomPaintingPage.jsp" />
+	</definition>
+
+<definition name="GenrePanelPage" extends="base-definition">
+		<put-attribute name="title" value="Genres" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/GenrePanelPage.jsp" />
+	</definition>
+
+
 
 </tiles-definitions>

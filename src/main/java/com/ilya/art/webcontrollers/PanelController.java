@@ -2,15 +2,19 @@ package com.ilya.art.webcontrollers;
 
 import java.io.IOException;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ilya.art.dto.ExhibitionEditionDto;
+import com.ilya.art.dto.GenreDto;
+import com.ilya.art.dto.GenreEditDto;
 import com.ilya.art.dto.NewsDto;
 import com.ilya.art.services.interfaces.ExhibitionService;
+import com.ilya.art.services.interfaces.GenreService;
 import com.ilya.art.services.interfaces.NewsService;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
@@ -32,6 +39,9 @@ public class PanelController {
 
 	@Autowired
 	NewsService newsService;
+
+	@Autowired
+	GenreService genreService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	String getDeffaultPanelView() {
@@ -121,6 +131,45 @@ public class PanelController {
 		newsService.editNews(newsDto);
 		redirects.addFlashAttribute("statusOfPreviousOperation", "Success");
 		return "redirect:/panel/";
+	}
+
+	@RequestMapping(value = "/genre", method = RequestMethod.GET)
+	String getGenrePanelPage(Model model) {
+		model.addAttribute("GenreList", genreService.getAllGenresDto());
+		return "GenrePanelPage";
+	}
+
+	@RequestMapping(value = "/addGenre", method = RequestMethod.POST)
+	public @ResponseBody String addGenre(@RequestParam String genre) {
+		try {
+			genreService.addNewGenre(genre);
+			return "New genre has been added";
+		} catch (EntityExistsException ex) {
+			return "Sorry, but this genre already exists";
+		}
+	}
+
+	@RequestMapping(value = "/deleteGenre", method = RequestMethod.POST)
+	public @ResponseBody String deleteGenre(@RequestParam String genre) {
+		try {
+			genreService.deleteGenre(genre);
+			return "Deleted";
+		} catch (EntityNotFoundException ex) {
+			return "This genre does not exist";
+		}
+	}
+
+	@RequestMapping(value = "/editGenre", method = RequestMethod.POST)
+	public @ResponseBody String editGenre(@Valid @RequestBody GenreEditDto genreEditDto, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				genreService.editGenre(genreEditDto);
+				return "Changed";
+			} catch (EntityNotFoundException ex) {
+				return "This genre does not exist.";
+			}
+		} else
+			return "Validation errror";
 	}
 
 }

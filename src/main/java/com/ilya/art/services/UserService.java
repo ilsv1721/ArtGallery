@@ -10,14 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ilya.art.domain.User;
 import com.ilya.art.dto.UserDetailsDto;
 import com.ilya.art.repositories.interfaces.RoleDao;
-import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.repositories.interfaces.UserDao;
 
 @Service
 @Transactional
 public class UserService implements com.ilya.art.services.interfaces.UserService {
 
 	@Autowired
-	UserDAO userDao;
+	UserDao userDao;
 
 	@Autowired
 	RoleDao roleDao;

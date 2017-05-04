@@ -24,6 +24,9 @@
 <body>
 
 	<script src="<c:url value='/resources/js/jquery-3.2.1.min.js' />"></script>
+	<script src="<c:url value='/resources/js/jquery.validate.min.js' />"></script>
+	<script src="<c:url value='/resources/js/jquery.serializeObject.min.js' />"></script>
+	
 
 	<section id="sidemenu">
 		<tiles:insertAttribute name="menu" />

@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.News;
 import com.ilya.art.dto.NewsDto;
-import com.ilya.art.dto.converters.NewsDtoToNews;
+import com.ilya.art.dto.converters.NewsDtoToNewsConverter;
 import com.ilya.art.repositories.interfaces.NewsDao;
-import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.repositories.interfaces.UserDao;
 import com.ilya.art.utils.web.UrlEntityFieldAssistantMatcher;
 
 @Service
@@ -22,7 +22,7 @@ public class NewsService implements com.ilya.art.services.interfaces.NewsService
 	NewsDao newDao;
 
 	@Autowired
-	UserDAO userDao;
+	UserDao userDao;
 
 	public void persist(News entity) {
 		newDao.persist(entity);
@@ -63,14 +63,14 @@ public class NewsService implements com.ilya.art.services.interfaces.NewsService
 
 	@Override
 	public void editNews(NewsDto newsDto) {
-		News news = NewsDtoToNews.convert(newsDto, userDao.findByEmail(newsDto.getKeyAuthor()));
+		News news = NewsDtoToNewsConverter.convert(newsDto, userDao.findByEmail(newsDto.getKeyAuthor()));
 		newDao.merge(news);
 
 	}
 
 	@Override
 	public void persistNews(NewsDto newsDto) {
-		News news = NewsDtoToNews.convert(newsDto, userDao.findByEmail(newsDto.getKeyAuthor()));
+		News news = NewsDtoToNewsConverter.convert(newsDto, userDao.findByEmail(newsDto.getKeyAuthor()));
 		newDao.persist(news);
 	}
 

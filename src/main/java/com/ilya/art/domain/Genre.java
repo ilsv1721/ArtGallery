@@ -1,14 +1,22 @@
 package com.ilya.art.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "genres")
+@NamedQueries({ @NamedQuery(name = "findByGenre", query = "from Genre gen where gen.genre=:genre_search"),
+		@NamedQuery(name = "findAll", query = "from Genre gen") })
 public class Genre {
 
 	@Id
@@ -18,6 +26,9 @@ public class Genre {
 
 	@Column(name = "genre")
 	private String genre;
+
+	@ManyToMany(mappedBy = "genre")
+	private Set<Painting> paintingsWithThisGenre = new HashSet<>();
 
 	public Genre() {
 	}
@@ -40,6 +51,14 @@ public class Genre {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+
+	public Set<Painting> getPaintingsWithThisGenre() {
+		return paintingsWithThisGenre;
+	}
+
+	public void setPaintingsWithThisGenre(Set<Painting> paintingsWithThisGenre) {
+		this.paintingsWithThisGenre = paintingsWithThisGenre;
 	}
 
 	@Override

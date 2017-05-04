@@ -23,7 +23,7 @@ import com.ilya.art.dto.ExhibitionAnnounceDto;
 import com.ilya.art.dto.ExhibitionEditionDto;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
-import com.ilya.art.repositories.interfaces.UserDAO;
+import com.ilya.art.repositories.interfaces.UserDao;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 import com.ilya.art.utils.files.HashCodePathFileAssistant;
 import com.ilya.art.utils.files.PathAndFileAssistant;
@@ -42,7 +42,7 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 	ExhibitionDao exDao;
 
 	@Autowired
-	UserDAO userDao;
+	UserDao userDao;
 
 	public void persist(Exhibition entity) {
 		exDao.persist(entity);
@@ -91,13 +91,21 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 		for (MultipartFile resource : exhibAnounceDTO.getExhiMedia()) {
 			try {
 				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
-				pathAndFileAssistant.saveToFile(prefix, path, resource);
 				exib.getPaintings().add(new Painting(path.getPathToFile() + path.getFilename()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		exDao.persist(exib);
+		for (MultipartFile resource : exhibAnounceDTO.getExhiMedia()) {
+			try {
+				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
+				pathAndFileAssistant.saveToFile(prefix, path, resource);
+				exib.getPaintings().add(new Painting(path.getPathToFile() + path.getFilename()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

@@ -22,5 +22,6 @@ public interface ExhibitionService extends BasicService<Exhibition, Long>, WebUr
 	public ExhibitionEditionDto getExhibitionEditionDto(Long id);
 
 	public void deleteExhibition(Long id);
-
+	
+	
 }

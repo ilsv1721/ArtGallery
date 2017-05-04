@@ -1,12 +1,17 @@
 package com.ilya.art.dto;
 
+import java.io.Serializable;
+
 import com.ilya.art.domain.Exhibition;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 
-public class BasicExhibitionDto {
+public class BasicExhibitionDto implements Serializable {
+	
+	private static final long serialVersionUID = 7650466647313331106L;
+	
 	private String title;
-	DtoDate startDate;
-	DtoDate endDate;
+	DateDto startDate;
+	DateDto endDate;
 
 	public BasicExhibitionDto() {
 	}
@@ -26,19 +31,19 @@ public class BasicExhibitionDto {
 		this.title = title;
 	}
 
-	public DtoDate getStartDate() {
+	public DateDto getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(DtoDate startDate) {
+	public void setStartDate(DateDto startDate) {
 		this.startDate = startDate;
 	}
 
-	public DtoDate getEndDate() {
+	public DateDto getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(DtoDate endDate) {
+	public void setEndDate(DateDto endDate) {
 		this.endDate = endDate;
 	}
 

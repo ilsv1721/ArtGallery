@@ -3,11 +3,11 @@ package com.ilya.art.dto.converters;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.ilya.art.dto.DtoDate;
+import com.ilya.art.dto.DateDto;
 
 public abstract class DateDtoDateJavaConverter {
 
-	static public Date convert(DtoDate dtoDate) {
+	static public Date convert(DateDto dtoDate) {
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();
@@ -20,11 +20,11 @@ public abstract class DateDtoDateJavaConverter {
 
 	}
 
-	static public DtoDate convert(Date date) {
+	static public DateDto convert(Date date) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();
 		calendar.setTime(date);
-		DtoDate retDate = new DtoDate(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1,
+		DateDto retDate = new DateDto(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH) + 1,
 				calendar.get(Calendar.YEAR));
 		calendar.clear();
 		return retDate;

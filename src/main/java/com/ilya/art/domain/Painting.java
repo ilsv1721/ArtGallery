@@ -14,10 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "paintings")
+@NamedQueries({ @NamedQuery(name = "getCount", query = "select count(*) from Painting p"),
+		@NamedQuery(name = "selectAll", query = "from Painting p") })
 public class Painting {
 
 	@Id
@@ -47,7 +51,7 @@ public class Painting {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "paintings_exhibition", joinColumns = @JoinColumn(name = "painting_id"), inverseJoinColumns = @JoinColumn(name = "exhibition_id"))
-	private Set<Genre> exhibitions = new HashSet<>();
+	private Set<Exhibition> exhibitions = new HashSet<>();
 
 	public Painting() {
 	}
@@ -102,6 +106,22 @@ public class Painting {
 
 	public void setAuthor(User author) {
 		this.author = author;
+	}
+
+	public Set<Genre> getGenre() {
+		return genre;
+	}
+
+	public void setGenre(Set<Genre> genre) {
+		this.genre = genre;
+	}
+
+	public Set<Exhibition> getExhibitions() {
+		return exhibitions;
+	}
+
+	public void setExhibitions(Set<Exhibition> exhibitions) {
+		this.exhibitions = exhibitions;
 	}
 
 	@Override
