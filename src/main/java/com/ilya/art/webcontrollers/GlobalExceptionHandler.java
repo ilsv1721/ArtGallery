@@ -13,7 +13,7 @@ import com.ilya.art.exceptions.NotFoundException;
 public class GlobalExceptionHandler {
 
 	private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
-/*
+
 	@ExceptionHandler(Exception.class)
 	public String handleNotFoundException(HttpServletRequest request, Exception ex) {
 		if (ex != null)
@@ -25,5 +25,5 @@ public class GlobalExceptionHandler {
 		logger.error("Exception:: Ocured while trying to get resource by URL " + request.getRequestURL());
 		return "InternalServerErrorPage";
 	}
-*/
+
 }
