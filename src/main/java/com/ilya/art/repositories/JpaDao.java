@@ -37,7 +37,7 @@ public abstract class JpaDao<E, K> implements Dao<E, K> {
 	}
 
 	@Override
-	public E findById(K id) {
+	public E getById(K id) {
 		return (E) entityManager.find(entityClass, id);
 	}
 

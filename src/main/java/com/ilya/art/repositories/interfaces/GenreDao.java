@@ -8,6 +8,6 @@ public interface GenreDao extends Dao<Genre, Long> {
 
 	public Genre findByGenreString(String genre);
 
-	public List<Genre> getAllGenres();
+	public List<Genre> getAll();
 
 }

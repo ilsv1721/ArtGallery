@@ -3,9 +3,14 @@ package com.ilya.art.utils.files;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -30,6 +35,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class HashCodePathFileAssistant implements PathAndFileAssistant<MultipartFile> {
 
+	private static final Logger logger = LogManager.getLogger(HashCodePathFileAssistant.class);
+
 	public final String MD_5 = "MD5";
 
 	private final int numSymbolsInFolderNames;
@@ -37,17 +44,19 @@ public class HashCodePathFileAssistant implements PathAndFileAssistant<Multipart
 
 	public HashCodePathFileAssistant(int numSymbolsInFolderNames) {
 		this.hashingAlgorithm = MD_5;
-		if (numSymbolsInFolderNames <= 0)
-			throw new IllegalStateException();
-		else {
+		if (numSymbolsInFolderNames <= 0) {
+			logger.warn(" Illegal argument numSymbolsInFolderNames. Default was used. ");
+			this.numSymbolsInFolderNames = 2;
+		} else {
 			this.numSymbolsInFolderNames = numSymbolsInFolderNames;
 		}
 	}
 
 	public HashCodePathFileAssistant(int numSymbolsInFolderNames, String hashingAlgorithm) {
-		if (numSymbolsInFolderNames <= 0)
+		if (numSymbolsInFolderNames <= 0) {
+			logger.warn(" Illegal argument numSymbolsInFolderNames. Default was used. ");
 			throw new IllegalStateException();
-		else {
+		} else {
 			this.numSymbolsInFolderNames = numSymbolsInFolderNames;
 		}
 		this.hashingAlgorithm = hashingAlgorithm;
@@ -60,7 +69,7 @@ public class HashCodePathFileAssistant implements PathAndFileAssistant<Multipart
 		try {
 			md5Byted = MessageDigest.getInstance(this.hashingAlgorithm).digest(resourceAsBytes);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error(e.getClass().getName() + " while trying invike path utility. ");
 		}
 		String hashString = new BigInteger(1, md5Byted).toString(16);
 		StringBuilder sb = new StringBuilder();
@@ -82,5 +91,18 @@ public class HashCodePathFileAssistant implements PathAndFileAssistant<Multipart
 			resource.transferTo(fileToSaveIn);
 		}
 
+	}
+
+	@Override
+	public void deleteFile(java.nio.file.Path path) {
+		try {
+			Files.delete(path);
+		} catch (NoSuchFileException e) {
+			logger.error(e.getClass().getName() + " while trying delete painting from hard drive. ");
+		} catch (DirectoryNotEmptyException e) {
+			logger.error(e.getClass().getName() + " while trying delete painting from hard drive. ");
+		} catch (IOException e) {
+			logger.error(e.getClass().getName() + " while trying delete painting from hard drive. ");
+		}
 	}
 }

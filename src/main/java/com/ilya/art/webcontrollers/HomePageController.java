@@ -11,5 +11,10 @@ public class HomePageController {
 	public String getHomePage() {
 		return "HomePage";
 	}
+	
+	@RequestMapping(value =  "/about", method = RequestMethod.GET)
+	public String getAboutPage() {
+		return "AboutPage";
+	}
 
 }

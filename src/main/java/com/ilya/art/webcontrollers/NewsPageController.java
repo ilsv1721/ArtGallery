@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.ilya.art.domain.News;
+import com.ilya.art.dto.NewsDto;
 import com.ilya.art.services.interfaces.NewsService;
 
 @Controller
@@ -20,7 +20,7 @@ public class NewsPageController {
 
 	@RequestMapping
 	public String getDefaultNewsPage(HttpServletRequest request) {
-		List<News> descNewsList = newsService.getDescOrderedNews();
+		List<NewsDto> descNewsList = newsService.getDescOrderedNews();
 		request.setAttribute("newsList", descNewsList);
 		return "NewsPage";
 

@@ -3,25 +3,43 @@ package com.ilya.art.services.interfaces;
 import java.util.List;
 
 import com.ilya.art.domain.Exhibition;
-import com.ilya.art.dto.ExhibitionAnnounceDto;
-import com.ilya.art.dto.ExhibitionEditionDto;
-import com.ilya.art.utils.web.WebUrlEntityFieldMatchable;
+import com.ilya.art.dto.ExhibitionDto;
+import com.ilya.art.dto.ExhibitionTitileAndIdDto;
+import com.ilya.art.dto.PaintingDto;
+import com.ilya.art.utils.web.EntityMetaURLMappable;
+import com.ilya.art.utils.web.UrlEntityMapper;
 
-public interface ExhibitionService extends BasicService<Exhibition, Long>, WebUrlEntityFieldMatchable {
+public interface ExhibitionService extends EntityMetaURLMappable {
 
 	public Exhibition findExhibition(String title);
 
-	public List<Exhibition> findAll();
+	public ExhibitionDto findExhibition(Long id);
 
-	public void anounceNewExhibition(ExhibitionAnnounceDto exhibAnounceDTO);
+	public List<Exhibition> getAllExhibition();
 
-	public void editExhibition(ExhibitionEditionDto exDto);
+	public List<ExhibitionTitileAndIdDto> getPastExhibitionTitileAndIdDto();
 
-	public ExhibitionEditionDto getExhibitionEditionDto(String titile);
+	public List<ExhibitionTitileAndIdDto> getAllExhibitionTitileAndIdDto();
 
-	public ExhibitionEditionDto getExhibitionEditionDto(Long id);
+	public List<ExhibitionDto> findAllBasicDto();
+
+	public void anounceNewExhibition(ExhibitionDto exhibAnounceDTO);
+
+	public void editExhibition(ExhibitionDto exDto);
+
+	public ExhibitionDto getExhibitionEditionDto(String titile);
+
+	public ExhibitionDto getExhibitionEditionDto(Long id);
 
 	public void deleteExhibition(Long id);
-	
-	
+
+	public List<PaintingDto> getPaintingsOfExhibition(long id);
+
+	public List<UrlEntityMapper> getCurrentExhibitions();
+
+	public List<UrlEntityMapper> getPastExhibitions();
+
+	public List<UrlEntityMapper> getFutureExhibitions();
+
+	public List<UrlEntityMapper> findExhibitionByTitleSubstring(String substring);
 }

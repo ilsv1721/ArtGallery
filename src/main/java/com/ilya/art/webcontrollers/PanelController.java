@@ -18,16 +18,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ilya.art.dto.ExhibitionEditionDto;
+import com.ilya.art.dto.ExhibitionDto;
 import com.ilya.art.dto.GenreDto;
 import com.ilya.art.dto.GenreEditDto;
 import com.ilya.art.dto.NewsDto;
+import com.ilya.art.dto.PaintingDto;
+import com.ilya.art.dto.PaintingMetaDto;
+import com.ilya.art.dto.RoleDto;
+import com.ilya.art.dto.RoleEditDto;
 import com.ilya.art.services.interfaces.ExhibitionService;
 import com.ilya.art.services.interfaces.GenreService;
 import com.ilya.art.services.interfaces.NewsService;
+import com.ilya.art.services.interfaces.PaintingService;
+import com.ilya.art.services.interfaces.RoleService;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Controller
@@ -43,20 +51,26 @@ public class PanelController {
 	@Autowired
 	GenreService genreService;
 
+	@Autowired
+	RoleService roleService;
+
+	@Autowired
+	PaintingService paintingService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	String getDeffaultPanelView() {
 		return "PanelPage";
 	}
 
 	@RequestMapping(value = "/exhibcreator", method = RequestMethod.GET)
-	String getExhibitionCreationPage() {
+	String getExhibitionCreationPage(Model model) {
+		model.addAttribute("exhibAnounceDTO", new ExhibitionDto());
 		return "ExhibitionCreationPage";
 	}
 
 	@RequestMapping(value = "/exhibcreator", method = RequestMethod.POST)
-	String process(HttpServletRequest request,
-			@Valid @ModelAttribute("exhibAnounceDTO") ExhibitionEditionDto exhibEditionDTO, Errors errors)
-			throws IllegalStateException, IOException {
+	String process(HttpServletRequest request, @Valid @ModelAttribute("exhibAnounceDTO") ExhibitionDto exhibEditionDTO,
+			Errors errors) throws IllegalStateException, IOException {
 		exhibitionService.anounceNewExhibition(exhibEditionDTO);
 		return ("redirect:/panel/");
 	}
@@ -88,8 +102,7 @@ public class PanelController {
 
 	@RequestMapping(value = "/exhibeditor/{exhibFormatedTitle}", method = RequestMethod.POST)
 	String exhibitionEdition(@PathVariable String exhibFormatedTitle,
-			@ModelAttribute("exhibEditionDTO") ExhibitionEditionDto exhibitionEditionDto,
-			RedirectAttributes redirects) {
+			@ModelAttribute("exhibEditionDTO") ExhibitionDto exhibitionEditionDto, RedirectAttributes redirects) {
 		exhibitionService.editExhibition(exhibitionEditionDto);
 		redirects.addFlashAttribute("statusOfPreviousOperation", "Success");
 		return "redirect:/panel/";
@@ -133,30 +146,30 @@ public class PanelController {
 		return "redirect:/panel/";
 	}
 
-	@RequestMapping(value = "/genre", method = RequestMethod.GET)
-	String getGenrePanelPage(Model model) {
-		model.addAttribute("GenreList", genreService.getAllGenresDto());
-		return "GenrePanelPage";
-	}
-
 	@RequestMapping(value = "/addGenre", method = RequestMethod.POST)
-	public @ResponseBody String addGenre(@RequestParam String genre) {
-		try {
-			genreService.addNewGenre(genre);
-			return "New genre has been added";
-		} catch (EntityExistsException ex) {
-			return "Sorry, but this genre already exists";
-		}
+	public @ResponseBody String addGenre(@Valid @RequestBody GenreDto genre, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				genreService.addNewGenre(genre);
+				return "New genre has been added";
+			} catch (EntityExistsException ex) {
+				return "Sorry, but this genre already exists";
+			}
+		} else
+			return "Validate errors: " + res.getErrorCount();
 	}
 
 	@RequestMapping(value = "/deleteGenre", method = RequestMethod.POST)
-	public @ResponseBody String deleteGenre(@RequestParam String genre) {
-		try {
-			genreService.deleteGenre(genre);
-			return "Deleted";
-		} catch (EntityNotFoundException ex) {
-			return "This genre does not exist";
-		}
+	public @ResponseBody String deleteGenre(@Valid @RequestBody GenreDto genre, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				genreService.deleteGenre(genre);
+				return "Deleted";
+			} catch (EntityNotFoundException ex) {
+				return "This genre does not exist";
+			}
+		} else
+			return "Validate errors: " + res.getErrorCount();
 	}
 
 	@RequestMapping(value = "/editGenre", method = RequestMethod.POST)
@@ -169,7 +182,97 @@ public class PanelController {
 				return "This genre does not exist.";
 			}
 		} else
-			return "Validation errror";
+			return "Validate errors: " + res.getErrorCount();
+	}
+
+	@RequestMapping(value = "/genre", method = RequestMethod.GET)
+	String getGenrePanelPage(Model model) {
+		model.addAttribute("GenreList", genreService.getAllDto());
+		return "GenrePanelPage";
+	}
+
+	@RequestMapping(value = "/role", method = RequestMethod.GET)
+	String RolePanelPage(Model model) {
+		model.addAttribute("RoleList", roleService.getAllDto());
+		return "RolePanelPage";
+	}
+
+	@RequestMapping(value = "/addRole", method = RequestMethod.POST)
+	public @ResponseBody String addRole(@Valid @RequestBody RoleDto role, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				roleService.addNewRole(role);
+				return "New role has been added";
+			} catch (EntityExistsException ex) {
+				return "Sorry, but this role already exists";
+			}
+		} else
+			return "Validate errors: " + res.getErrorCount();
+	}
+
+	@RequestMapping(value = "/deleteRole", method = RequestMethod.POST)
+	public @ResponseBody String deleteRole(@Valid @RequestBody RoleDto role, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				roleService.deleteGenre(role);
+				return "Deleted";
+			} catch (EntityNotFoundException ex) {
+				return "This role does not exist";
+			}
+		} else
+			return "Validate errors: " + res.getErrorCount();
+	}
+
+	@RequestMapping(value = "/editRole", method = RequestMethod.POST)
+	public @ResponseBody String editRole(@Valid @RequestBody RoleEditDto roleEditDto, BindingResult res) {
+		if (!res.hasErrors()) {
+			try {
+				roleService.editGenre(roleEditDto);
+				return "Changed";
+			} catch (EntityNotFoundException ex) {
+				return "This role does not exist.";
+			}
+		} else
+			return "Validate errors: " + res.getErrorCount();
+	}
+
+	@RequestMapping(value = "/paintingnew", method = RequestMethod.GET)
+	public String getPaintingNewPage(Model model) {
+		model.addAttribute(new PaintingDto());
+		model.addAttribute("genreList", genreService.getAllDto());
+		model.addAttribute("exhibitionList", exhibitionService.findAllBasicDto());
+		return "NewPaintingPage";
+	}
+
+	@RequestMapping(value = "/paintingnew", method = RequestMethod.POST)
+	public String processNewPaint(@Valid PaintingDto paintingDto, BindingResult binds,
+			@RequestPart MultipartFile file) {
+		if ((!binds.hasErrors()) && (!file.isEmpty())) {
+			paintingService.addNewPainting(paintingDto, file);
+		}
+		return "redirect:/panel/";
+	}
+
+	@RequestMapping(value = "/paintingedit", method = RequestMethod.GET)
+	public String getPaintingEditPage(Model model) {
+		model.addAttribute("exhibitions", exhibitionService.getAllExhibitionTitileAndIdDto());
+		model.addAttribute("paintingEditDto", new PaintingMetaDto());
+		model.addAttribute("genreList", genreService.getAllDto());
+		return "PaintingEditPage";
+	}
+
+	@RequestMapping(value = "/paintingedit", method = RequestMethod.POST)
+	public String processPaintingEditPage(@Valid PaintingMetaDto paintingDto, BindingResult binds, Model model) {
+		if (!binds.hasErrors()) {
+			paintingService.editDescContent(paintingDto);
+		}
+		return "redirect:/panel/paintingedit";
+	}
+
+	@RequestMapping(value = "/paintingdelete", method = RequestMethod.POST)
+	public @ResponseBody String editPaintingEdit(Long id) {
+		paintingService.deletePainting(id);
+		return "ok";
 	}
 
 }

@@ -17,7 +17,7 @@ public class JpaExhibitionDao extends JpaDao<Exhibition, Long> implements Exhibi
 	}
 
 	@Override
-	public List<Exhibition> findAll() {
+	public List<Exhibition> getAll() {
 		return entityManager.createNamedQuery("Exhibition.findAll", Exhibition.class).getResultList();
 	}
 	

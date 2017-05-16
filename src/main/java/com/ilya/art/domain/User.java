@@ -17,7 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -64,17 +63,8 @@ public class User {
 	@org.hibernate.annotations.Generated(GenerationTime.ALWAYS)
 	private Date lastUpdate;
 
-	@Column(name = "phone")
-	private String phone;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Adress> adresses = new HashSet<>();
-
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-	private BalanceDetails balance;
-
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Adress> paintings = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author")
+	private Set<Painting> paintings = new HashSet<>();
 
 	public String getPassword() {
 		return password;
@@ -82,14 +72,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Set<Adress> getPaintings() {
-		return paintings;
-	}
-
-	public void setPaintings(Set<Adress> paintings) {
-		this.paintings = paintings;
 	}
 
 	public User(String firstName, String lastName, String email, String password) {
@@ -158,28 +140,12 @@ public class User {
 		this.lastUpdate = lastUpdate;
 	}
 
-	public String getPhone() {
-		return phone;
+	public Set<Painting> getPaintings() {
+		return paintings;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public Set<Adress> getAdresses() {
-		return adresses;
-	}
-
-	public void setAdresses(Set<Adress> adresses) {
-		this.adresses = adresses;
-	}
-
-	public BalanceDetails getBalance() {
-		return balance;
-	}
-
-	public void setBalance(BalanceDetails balance) {
-		this.balance = balance;
+	public void setPaintings(Set<Painting> paintings) {
+		this.paintings = paintings;
 	}
 
 	@Override

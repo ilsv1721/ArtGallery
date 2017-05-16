@@ -1,0 +1,33 @@
+%d{yyyy-MM-dd HH:mm:ss} ERROR RegisterPageController:38 - testyu
+2017-05-07 01:27:23 ERROR ExhibitionService:74 - NoResultException:: Ocured while trying to find exhibition with titleThe Witcher123
+2017-05-07 01:27:23 ERROR GlobalExceptionHandler:19 - NotFoundException:: Ocured while trying to get resource from URLhttp://localhost:8080/art/exhibitions/The_Witcher123
+2017-05-07 01:57:32 ERROR ExhibitionService:74 - javax.persistence.NoResultException:: Ocured while trying to find exhibition with titleThe Witcher2
+2017-05-07 01:57:32 ERROR ExhibitionService:75 - [Ljava.lang.StackTraceElement;@611d35fe
+2017-05-07 01:57:32 ERROR GlobalExceptionHandler:19 - NotFoundException:: Ocured while trying to get resource from URLhttp://localhost:8080/art/exhibitions/The_Witcher2
+2017-05-08 22:09:10 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URI http://localhost:8080/art/panel/paintingnew
+2017-05-08 22:14:12 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URI http://localhost:8080/art/panel/paintingnew
+2017-05-10 22:45:30 ERROR SqlExceptionHelper:131 - Duplicate entry '6-1' for key 'PRIMARY'
+2017-05-10 22:45:30 ERROR ExceptionMapperStandardImpl:39 - HHH000346: Error during managed flush [org.hibernate.exception.ConstraintViolationException: could not execute statement]
+2017-05-10 22:49:56 ERROR SqlExceptionHelper:131 - Duplicate entry '7-1' for key 'PRIMARY'
+2017-05-10 22:49:56 ERROR ExceptionMapperStandardImpl:39 - HHH000346: Error during managed flush [org.hibernate.exception.ConstraintViolationException: could not execute statement]
+2017-05-10 22:53:39 ERROR SqlExceptionHelper:131 - Duplicate entry '8-1' for key 'PRIMARY'
+2017-05-10 22:53:39 ERROR ExceptionMapperStandardImpl:39 - HHH000346: Error during managed flush [org.hibernate.exception.ConstraintViolationException: could not execute statement]
+2017-05-15 21:41:47 ERROR ExhibitionService:56 - javax.persistence.NoResultException:: Ocured while trying to find exhibition with title1
+2017-05-15 21:41:47 ERROR GlobalExceptionHandler:19 - NotFoundException:: Ocured while trying to get resource by URI http://localhost:8080/art/exhibitions/1
+2017-05-15 21:41:55 ERROR ExhibitionService:56 - javax.persistence.NoResultException:: Ocured while trying to find exhibition with title1
+2017-05-15 21:41:55 ERROR GlobalExceptionHandler:19 - NotFoundException:: Ocured while trying to get resource by URI http://localhost:8080/art/exhibitions/1
+2017-05-16 06:31:27 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:32:28 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:32:31 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:33:14 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:33:16 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:34:00 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:34:03 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 06:34:05 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/exhibitions/3
+2017-05-16 07:53:03 ERROR ExhibitionService:55 - javax.persistence.NoResultException:: Ocured while trying to find exhibition with titleSome titile1
+2017-05-16 07:53:03 ERROR GlobalExceptionHandler:19 - NotFoundException:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/exhibeditor/Some_titile1
+2017-05-16 08:03:24 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/exhibcreator
+2017-05-16 08:07:47 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/newscreate
+2017-05-16 08:11:53 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/newseditor/3
+2017-05-16 08:13:14 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/newseditor/3
+2017-05-16 08:13:25 ERROR GlobalExceptionHandler:25 - Exception:: Ocured while trying to get resource by URL http://localhost:8080/art/panel/newseditor/3

@@ -6,19 +6,16 @@ import com.ilya.art.dto.GenreDto;
 import com.ilya.art.dto.GenreEditDto;
 
 public interface GenreService {
-	void addNewGenre(String genre);
-	void deleteGenre(long genreId);
-	void deleteGenre(String genre);
+	void addNewGenre(GenreDto genreDto);
+
+	void deleteGenre(GenreDto genreDto);
+
 	void editGenre(GenreEditDto genreEditDto);
 
-	/**
-	 * 
-	 * @param genre
-	 * @return true - if exist; false - duplicate
-	 */
 	boolean validateExist(GenreDto genreDto);
-	boolean validateExistByGenreString(String genreString);
-	List<GenreDto> getAllGenresDto();
-	
+
+	List<GenreDto> getAllDto();
+
+	List<GenreDto> getGenreOfPainting(long paintingId);
 
 }

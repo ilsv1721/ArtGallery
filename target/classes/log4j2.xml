@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+	<Appenders>
+		<RollingFile name="RollingFile"
+			filename="/home/ilya/serverstorage/art/logger.log" filePattern="/home/ilya/serverstorage/art/logger-%d{MM-dd-yyyy}.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+		<RollingFile name="ErrorFile"
+			filename="/home/ilya/serverstorage/art/errlogger.log" filePattern="/home/ilya/serverstorage/art/errlogger-%d{MM-dd-yyyy}.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+
+	</Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="RollingFile" level="info" />
+			<AppenderRef ref="ErrorFile" level="error" />
+		</Root>
+
+	</Loggers>
+</Configuration>

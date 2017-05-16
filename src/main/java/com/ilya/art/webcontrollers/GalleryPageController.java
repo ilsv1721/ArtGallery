@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ilya.art.services.interfaces.ExhibitionService;
 import com.ilya.art.services.interfaces.PaintingService;
 
 @Controller
@@ -15,9 +16,19 @@ public class GalleryPageController {
 	@Autowired
 	PaintingService paintService;
 
+	@Autowired
+	ExhibitionService exhibitionService;
+
 	@RequestMapping(value = "/random", method = RequestMethod.GET)
 	public String getRandomPaintingPage(Model model) {
 		model.addAttribute("paintingDto", paintService.getRandomPainting());
 		return "RandomPaintingPage";
 	}
+
+	@RequestMapping(value = "/byExhibition")
+	public String getPaintingsByExhibition(Model model) {
+		model.addAttribute("exhibitions", exhibitionService.getPastExhibitionTitileAndIdDto());
+		return "GalleryByExhibitionPage";
+	}
+
 }

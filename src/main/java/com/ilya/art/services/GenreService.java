@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ilya.art.domain.Genre;
 import com.ilya.art.dto.GenreDto;
 import com.ilya.art.dto.GenreEditDto;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.GenreDao;
+import com.ilya.art.repositories.interfaces.PaintingDao;
 
 @Service
 @Transactional
@@ -23,26 +25,25 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 	@Autowired
 	GenreDao genreDao;
 
+	@Autowired
+	PaintingDao paintDao;
+
 	@Override
-	public void addNewGenre(String genre) {
+	public void addNewGenre(GenreDto genre) {
 		try {
-			genreDao.findByGenreString(genre);
+			genreDao.findByGenreString(genre.getGenre());
 			throw new EntityExistsException();
 		} catch (NoResultException ex) {
-			genreDao.persist(new Genre(genre));
+			Genre genre1 = new Genre(genre.getGenre());
+			genreDao.persist(genre1);
 		}
-
-	}
-
-	@Override
-	public void deleteGenre(long genreId) {
 
 	}
 
 	@Override
 	public void editGenre(GenreEditDto genreDto) {
 		try {
-			Genre genreToChange = genreDao.findByGenreString(genreDto.getOldValue());
+			Genre genreToChange = genreDao.findByGenreString(genreDto.getGenre());
 			genreToChange.setGenre(genreDto.getNewValue());
 		} catch (NoResultException ex) {
 			throw new EntityNotFoundException();
@@ -51,42 +52,28 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 	}
 
 	@Override
-	public boolean validateExist(GenreDto genreDto) {
-		try {
-			if (genreDto.getId() > 0) {
-				genreDao.findById(genreDto.getId());
-			} else if (!genreDto.getGenre().isEmpty()) {
-				genreDao.findByGenreString(genreDto.getGenre());
-			}
-		} catch (NoResultException ex) {
-			return false;
-		}
-		return true;
-
-	}
-
-	@Override
-	public List<GenreDto> getAllGenresDto() {
+	public List<GenreDto> getAllDto() {
 		List<GenreDto> genresDto = new ArrayList<>();
-		genreDao.getAllGenres().forEach((genre) -> {
+		genreDao.getAll().forEach((genre) -> {
 			genresDto.add(new GenreDto(genre));
 		});
 		return genresDto;
 	}
 
 	@Override
-	public boolean validateExistByGenreString(String genreString) {
-		Genre genreObj = genreDao.findByGenreString(genreString);
-		if (genreObj != null) {
+	public boolean validateExist(GenreDto genreDto) {
+		try {
+			genreDao.findByGenreString(genreDto.getGenre());
 			return true;
-		} else
+		} catch (NoResultException ex) {
 			return false;
+		}
 	}
 
 	@Override
-	public void deleteGenre(String genre) {
+	public void deleteGenre(GenreDto genre) {
 		try {
-			Genre genreToDelete = genreDao.findByGenreString(genre);
+			Genre genreToDelete = genreDao.findByGenreString(genre.getGenre());
 			genreToDelete.getPaintingsWithThisGenre().forEach((paint) -> {
 				paint.getGenre().remove(genreToDelete);
 			});
@@ -96,6 +83,19 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 
 		}
 
+	}
+
+	@Override
+	public List<GenreDto> getGenreOfPainting(long paintingId) {
+		List<GenreDto> list = new ArrayList<>();
+		try {
+			paintDao.getById(paintingId).getGenre().forEach((genre) -> {
+				list.add(new GenreDto(genre));
+			});
+			return list;
+		} catch (NoResultException ex) {
+			throw new NotFoundException();
+		}
 	}
 
 }

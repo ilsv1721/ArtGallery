@@ -6,6 +6,6 @@ import com.ilya.art.domain.Exhibition;
 
 public interface ExhibitionDao extends Dao<Exhibition, Long>{
 	Exhibition findExhibition(String title);
-	List<Exhibition> findAll();
+	List<Exhibition> getAll();
 		
 }

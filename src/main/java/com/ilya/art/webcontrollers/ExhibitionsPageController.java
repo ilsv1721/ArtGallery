@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ilya.art.services.interfaces.ExhibitionService;
-import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Controller
 @RequestMapping(value = "/exhibitions")
@@ -18,14 +17,15 @@ public class ExhibitionsPageController {
 
 	@RequestMapping
 	public String deafaultExhibitionsPage(Model model) {
-		model.addAttribute("exhibitionsList", exServ.getUrlEntityFieldAssistantMatchers());
+		model.addAttribute("pastExhibitions", exServ.getPastExhibitions());
+		model.addAttribute("currentExhibitions", exServ.getCurrentExhibitions());
+		model.addAttribute("futureExhibitions", exServ.getFutureExhibitions());
 		return "ExhibitionsPage";
 	}
 
 	@RequestMapping(value = "/{exhibFormatedTitle}")
-	public String getConcreteExhibition(Model model, @PathVariable String exhibFormatedTitle) {
-		model.addAttribute("exhibition",
-				exServ.findExhibition(SimpleStringURLEncoderDecoder.decode(exhibFormatedTitle)));
+	public String getConcreteExhibition(Model model, @PathVariable Long exhibFormatedTitle) {
+		model.addAttribute("exhibition", exServ.findExhibition(exhibFormatedTitle));
 		return "ConcreteExhibitionPage";
 	}
 

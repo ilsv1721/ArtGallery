@@ -31,7 +31,7 @@
 			style="width: 100%">
 		<div
 			class="w3-display-topright w3-large w3-container w3-padding-16 w3-black"
-			style="font-variant: small-caps;">And check  auctions</div>
+			style="font-variant: small-caps;">And visit us offline</div>
 	</div>
 	
 

@@ -12,7 +12,7 @@ public class NewsDto implements Serializable {
 	private long id;
 	private Date publishedDate = new Date();
 	private String text;
-	private String keyAuthor;
+	private UserDto author;
 	private String title;
 
 	public NewsDto() {
@@ -23,10 +23,12 @@ public class NewsDto implements Serializable {
 		this.id = news.getId();
 		this.publishedDate = news.getPublishDate();
 		this.text = news.getContent();
-		this.keyAuthor = news.getWrittenBy().getEmail();
+		this.author = new UserDto(news.getWrittenBy());
 		this.title = news.getTitle();
 
 	}
+	
+	
 
 	public long getId() {
 		return id;
@@ -52,20 +54,20 @@ public class NewsDto implements Serializable {
 		this.text = text;
 	}
 
-	public String getKeyAuthor() {
-		return keyAuthor;
-	}
-
-	public void setKeyAuthor(String keyAuthor) {
-		this.keyAuthor = keyAuthor;
-	}
-
 	public String getTitle() {
 		return title;
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public UserDto getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(UserDto author) {
+		this.author = author;
 	}
 
 }

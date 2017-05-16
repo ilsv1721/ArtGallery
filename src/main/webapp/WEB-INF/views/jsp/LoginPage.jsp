@@ -1,35 +1,36 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Log in the system</title>
-</head>
-<body>
-	<c:out value="${error}" />
-	<sf:form action="login" method="post">
-		<table>
-			<tr>
-				<td>Username:</td>
-				<td><input type="text" name="username" value=""></td>
-			</tr>
-			<tr>
-				<td>Password:</td>
-				<td><input type="password" name="password" value=""></td>
-			</tr>
-			<tr>
-				<td>Remember me:</td>
-				<td><input type="checkbox" name="remember-me" id="remember_me"></td>
-			</tr>
-			<tr>
-				<td colspan="2"><input type="submit" name="submit"
-					value="Login" /></td>
-			</tr>
-		</table>
+
+<div class="w3-card-4">
+
+	<div class="w3-container w3-cyan ilya-smc w3-center">
+		<h2>Sign in</h2>
+	</div>
+
+	<sf:form action="login" method="post" class="w3-container">
+		<p>
+			<label class="ilay-smc">Email:</label>
+		</p>
+		<p>
+			<input type="text" name="username" value=""
+				class="w3-input w3-border w3-round" />
+		</p>
+		<p>
+			<label class="ilay-smc">Password:</label>
+		</p>
+		<p>
+			<input type="password" name="password" value=""
+				class="w3-input w3-border w3-round" />
+		</p>
+
+		<p>
+			<label class="ilay-smc">Remember me:</label> <input type="checkbox"
+				name="remember-me" id="remember_me" class="w3-check" />
+		</p>
+
+		<p>
+			<input type="submit" name="submit" value="Sign in"
+				class="w3-btn w3-blue-grey" />
+		</p>
 	</sf:form>
-</body>
-</html>
+</div>
+

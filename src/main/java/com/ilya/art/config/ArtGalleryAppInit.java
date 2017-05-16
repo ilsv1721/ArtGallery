@@ -11,7 +11,6 @@ public class ArtGalleryAppInit extends AbstractAnnotationConfigDispatcherServlet
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-
 		return new Class<?>[] { SecurityConfig.class, DataConfig.class };
 	}
 
@@ -29,14 +28,13 @@ public class ArtGalleryAppInit extends AbstractAnnotationConfigDispatcherServlet
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setMultipartConfig(new MultipartConfigElement("/home/ilya/123/", 2097152, 4194304, 0));
 	}
-	
-	
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		super.onStartup(servletContext);
 		servletContext.setInitParameter("spring.profiles.active", "devServerMySQL");
-		//servletContext.setInitParameter("spring.profiles.active", "devEmbed");
+		// servletContext.setInitParameter("spring.profiles.active",
+		// "devEmbed");
 	}
 
 }

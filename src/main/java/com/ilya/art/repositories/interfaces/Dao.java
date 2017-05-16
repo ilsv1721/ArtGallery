@@ -5,7 +5,7 @@ public interface Dao<E, K> {
 
 	void remove(E entity);
 
-	E findById(K id);
+	E getById(K id);
 
 	void merge(E entity);
 

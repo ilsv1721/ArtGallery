@@ -18,7 +18,7 @@ public class JpaGenreDao extends JpaDao<Genre, Long> implements GenreDao {
 	}
 
 	@Override
-	public List<Genre> getAllGenres() {
+	public List<Genre> getAll() {
 		return entityManager.createNamedQuery("findAll", Genre.class).getResultList();
 	}
 

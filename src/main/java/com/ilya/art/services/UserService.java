@@ -1,5 +1,8 @@
 package com.ilya.art.services;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.NoResultException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +19,8 @@ import com.ilya.art.repositories.interfaces.UserDao;
 @Transactional
 public class UserService implements com.ilya.art.services.interfaces.UserService {
 
+	static public String DEFFAULT_ROLE = "ROLE_USER";
+
 	@Autowired
 	UserDao userDao;
 
@@ -31,34 +36,37 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 		return new UserDetailsDto(user.getEmail(), user.getPassword(), user.getActiveStatus(), user.getRoles());
 	}
 
-	public void persist(User entity) {
-		userDao.persist(entity);
-	}
-
-	public void remove(User entity) {
-		userDao.remove(entity);
-	}
-
-	public User findById(Long id) {
-		return userDao.findById(id);
-	}
-
-	public User findByEmail(String email) {
-		return userDao.findByEmail(email);
-	}
-
-	public void merge(User entity) {
-		userDao.merge(entity);
+	@Override
+	public void registerNewUser(UserDetailsDto userDetailsDto) {
+		if (validateUniqueByEmail(userDetailsDto.getEmail())) {
+			User user = new User(userDetailsDto.getFirstName(), userDetailsDto.getLastName(), userDetailsDto.getEmail(),
+					passwordEncoder.encode(userDetailsDto.getPassword()));
+			user.getRoles().add(roleDao.getRole(DEFFAULT_ROLE));
+			user.setActiveStatus(true);
+			userDao.persist(user);
+		} else {
+			throw new EntityExistsException();
+		}
 	}
 
 	@Override
-	public void registerNewUser(UserDetailsDto userDetailsDto) {
-		User user = new User(userDetailsDto.getFirstName(), userDetailsDto.getLastName(), userDetailsDto.getEmail(),
-				passwordEncoder.encode(userDetailsDto.getPassword()));
-		user.getRoles().add(roleDao.getRole("ROLE_USER"));
-		user.setActiveStatus(true);
-		userDao.persist(user);
+	public boolean validateUniqueByEmail(String emailString) {
+		try {
+			userDao.findByEmail(emailString);
+			return false;
+		} catch (NoResultException ex) {
+			return true;
+		}
 	}
-	
-	
+
+	@Override
+	public boolean validateExistByEmail(String emailString) {
+		try {
+			userDao.findByEmail(emailString);
+			return true;
+		} catch (NoResultException ex) {
+			return false;
+		}
+	}
+
 }

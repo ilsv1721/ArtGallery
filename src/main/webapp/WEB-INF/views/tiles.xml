@@ -26,6 +26,7 @@
 			value="/WEB-INF/views/jsp/RegisterPage.jsp" />
 	</definition>
 
+	<!-- Login Page -->
 	<definition name="LoginPage" extends="base-definition">
 		<put-attribute name="title" value="Login" />
 		<put-attribute name="body" value="/WEB-INF/views/jsp/LoginPage.jsp" />
@@ -34,68 +35,122 @@
 	<definition name="ExhibitionsPage" extends="base-definition">
 		<put-attribute name="title" value="Exhibitions" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/ExhibitionsPage.jsp" />
+			value="/WEB-INF/views/jsp/exhibition/ExhibitionsPage.jsp" />
 	</definition>
 
 	<definition name="ConcreteExhibitionPage" extends="base-definition">
 		<put-attribute name="title" value="Exhibition" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/ExhibitionConcretePage.jsp" />
+			value="/WEB-INF/views/jsp/exhibition/ExhibitionConcretePage.jsp" />
 	</definition>
 
 	<definition name="NewsPage" extends="base-definition">
 		<put-attribute name="title" value="News" />
-		<put-attribute name="body" value="/WEB-INF/views/jsp/NewsPage.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/news/NewsPage.jsp" />
 	</definition>
 
 	<definition name="PanelPage" extends="base-definition">
 		<put-attribute name="title" value="ControlPanel" />
-		<put-attribute name="body" value="/WEB-INF/views/jsp/PanelPage.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/jsp/panel/PanelPage.jsp" />
 	</definition>
 
 	<definition name="ExhibitionCreationPage" extends="base-definition">
 		<put-attribute name="title" value="ControlPanel" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/ExhibitionCreationPage.jsp" />
+			value="/WEB-INF/views/jsp/panel/ExhibitionCreationPage.jsp" />
 	</definition>
 
 	<definition name="ExhibitionEditionChoosePage" extends="base-definition">
 		<put-attribute name="title"
 			value="Edition panel - Choose entity to edit" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/EditionChoosePage.jsp" />
+			value="/WEB-INF/views/jsp/panel/EditionChoosePage.jsp" />
 	</definition>
 
 	<definition name="ExhibitionEditionPage" extends="base-definition">
 		<put-attribute name="title" value="Editior" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/ExhibitionEditionPage.jsp" />
+			value="/WEB-INF/views/jsp/panel/ExhibitionEditionPage.jsp" />
 	</definition>
 
 	<definition name="NewsEditionPage" extends="base-definition">
 		<put-attribute name="title" value="Editior" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/NewsEditionPage.jsp" />
+			value="/WEB-INF/views/jsp/panel/NewsEditionPage.jsp" />
 	</definition>
 
 	<definition name="NewsCreationPage" extends="base-definition">
 		<put-attribute name="title" value="Creator" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/NewsCreationPage.jsp" />
+			value="/WEB-INF/views/jsp/panel/NewsCreationPage.jsp" />
 	</definition>
+
+	<definition name="GenrePanelPage" extends="base-definition">
+		<put-attribute name="title" value="Genres" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/GenrePanelPage.jsp" />
+	</definition>
+
+	<definition name="RolePanelPage" extends="base-definition">
+		<put-attribute name="title" value="Roles" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/RolePanelPage.jsp" />
+	</definition>
+
+
+	<definition name="NotFoundPage" extends="base-definition">
+		<put-attribute name="title" value="Welcome to the world of 404!" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/exceptions/NotFoundPage.jsp" />
+	</definition>
+	
+	<definition name="InternalServerErrorPage" extends="base-definition">
+		<put-attribute name="title" value="Lets praise the ADMINS!" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/exceptions/InternalServerErrorPage.jsp" />
+	</definition>
+	
+   <definition name="NewPaintingPage" extends="base-definition">
+		<put-attribute name="title" value="New painting" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/NewPaintingPage.jsp" />
+	</definition>
+
+	<definition name="PaintingEditPage" extends="base-definition">
+		<put-attribute name="title" value="Edit painting" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/PaintingEditPage.jsp" />
+	</definition>
+
 
 	<definition name="RandomPaintingPage" extends="base-definition">
 		<put-attribute name="title" value="RandomPainting" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/RandomPaintingPage.jsp" />
+			value="/WEB-INF/views/jsp/gallery/GalleryRandomPaintingPage.jsp" />
 	</definition>
 
-<definition name="GenrePanelPage" extends="base-definition">
-		<put-attribute name="title" value="Genres" />
+	<definition name="GalleryByExhibitionPage" extends="base-definition">
+		<put-attribute name="title" value="Gallery" />
 		<put-attribute name="body"
-			value="/WEB-INF/views/jsp/GenrePanelPage.jsp" />
+			value="/WEB-INF/views/jsp/gallery/GalleryByExhibitionPage.jsp" />
 	</definition>
 
+	<definition name="SearchResultPage" extends="base-definition">
+		<put-attribute name="title" value="Search" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/SearchResultPage.jsp" />
+	</definition>
 
+	<definition name="ConcretePaintPage" extends="base-definition">
+		<put-attribute name="title" value="Painting" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/painting/ConcretePaintPage.jsp" />
+	</definition>
+
+	<definition name="AboutPage" extends="base-definition">
+		<put-attribute name="title" value="About" />
+		<put-attribute name="body" value="/WEB-INF/views/jsp/AboutPage.jsp" />
+	</definition>
 
 </tiles-definitions>

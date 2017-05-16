@@ -1,0 +1,12 @@
+Все поднималось на Linuxe и соответственно все пути в бд прописаны с линуксовым сепаратором. (если нужно могу поменять)
+
+Для зпуска необохдимо:
+
+1) Поместить папку serverstorage (из корня гита) в какое-либо место на харде и в localstorage.properties (src/main/resources) прописать путь до папки exhibitions (которая в serverstorage) с слешем в конце.
+
+==>> Аккуратнее ЗДЕСЬ ЕСТЬ ДРОПЫ ТАБЛИЦ (для отладки) <<==
+2) В MySql создать бд и запустить в ней скрипт DevSheme.sql  из корня гита. 
+
+3) Настроить bd (mysql) в database.properties (src/main/resources).
+
+4)Указать место хранения логов log4j2.xml (src/main/resources) (filename/filepattern)

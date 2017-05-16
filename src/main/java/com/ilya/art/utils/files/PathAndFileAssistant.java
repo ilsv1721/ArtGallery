@@ -8,4 +8,6 @@ public interface PathAndFileAssistant<R> {
 
 	void saveToFile(String prefix, Path path, R resource) throws IllegalStateException, IOException;
 
+	void deleteFile(java.nio.file.Path path) throws IOException;
+
 }

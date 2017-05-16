@@ -11,7 +11,6 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 @ComponentScan(basePackages = { "com.ilya.art.webcontrollers" })
 
 public class WebConfig extends WebMvcConfigurerAdapter {
-	// static private int INTERNAL_VIEW_RESOLVER_ORDER = 10;
 	static private int TILES_VIEW_RESOLVER_ORDER = 7;
 
 	@Bean
@@ -38,11 +36,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		TilesViewResolver viewResolver = new TilesViewResolver();
 		viewResolver.setOrder(TILES_VIEW_RESOLVER_ORDER);
 		registry.viewResolver(viewResolver);
-	}
-
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-
 	}
 
 	@Override

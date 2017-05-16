@@ -12,7 +12,7 @@
 			x.className = x.className.replace(" w3-show", "");
 		}
 	}
-	
+
 	function myFunctionAc() {
 		var x = document.getElementById("acc");
 		if (x.className.indexOf("w3-show") == -1) {
@@ -34,10 +34,17 @@
 
 		<button class="w3-button " onclick="myFunction()">Gallery</button>
 
-		<div id="demo" class="w3-dropdown-content w3-bar-block w3-card-2" style="z-index: 1000;">
-			<a href="<c:url value="/gallery/random"/>" class="w3-bar-item w3-button">Random</a>
+		<div id="demo" class="w3-dropdown-content w3-bar-block w3-card-2"
+			style="z-index: 1000;">
+			<a href="<c:url value="/gallery/random"/>"
+				class="w3-bar-item w3-button">Random</a> <a
+				href="<c:url value="/gallery/byExhibition"/>"
+				class="w3-bar-item w3-button">By Exhibition</a>
 		</div>
+
 	</div>
+	<a href="<c:url value="/about"/>" class="w3-bar-item w3-button">About
+		us</a>
 
 
 	<security:authorize access="!isAuthenticated()">
@@ -64,10 +71,14 @@
 	</security:authorize>
 
 	<a href="<c:url value="/register"/>"
-		class="w3-bar-item w3-button w3-right">Register</a> <a href="#"
-		class="w3-bar-item w3-button w3-light-blue w3-right">Go</a> <input
-		type="text" class="w3-bar-item w3-input w3-right"
-		placeholder="Search..">
+		class="w3-bar-item w3-button w3-right">Register</a>
+	<form method="get" action="<c:url value="/search"/>"
+		enctype="text/plain">
+		<input type="submit" value="Go"
+			class="w3-bar-item w3-button w3-blue w3-right"> <input
+			pattern=".{3,10}" required type="text" name="searchstring"
+			class="w3-bar-item w3-input w3-right" placeholder="Search..">
+	</form>
 
 </div>
 

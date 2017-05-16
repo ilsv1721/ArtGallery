@@ -1,16 +1,13 @@
 package com.ilya.art.services;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,20 +15,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ilya.art.config.utils.LocalStorageProps;
 import com.ilya.art.domain.Exhibition;
-import com.ilya.art.domain.Painting;
-import com.ilya.art.dto.ExhibitionAnnounceDto;
-import com.ilya.art.dto.ExhibitionEditionDto;
+import com.ilya.art.dto.BasicUrlEnityMapperDto;
+import com.ilya.art.dto.ExhibitionDto;
+import com.ilya.art.dto.ExhibitionTitileAndIdDto;
+import com.ilya.art.dto.PaintingDto;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
+import com.ilya.art.exceptions.ExhibitionNotFoundException;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.UserDao;
-import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 import com.ilya.art.utils.files.HashCodePathFileAssistant;
 import com.ilya.art.utils.files.PathAndFileAssistant;
-import com.ilya.art.utils.web.UrlEntityFieldAssistantMatcher;
+import com.ilya.art.utils.web.UrlEntityMapper;
 
 @Service
 @Transactional
 public class ExhibitionService implements com.ilya.art.services.interfaces.ExhibitionService {
+
+	private static final Logger logger = LogManager.getLogger(ExhibitionService.class);
 
 	PathAndFileAssistant<MultipartFile> pathAndFileAssistant = new HashCodePathFileAssistant(2);
 
@@ -44,110 +45,176 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 	@Autowired
 	UserDao userDao;
 
-	public void persist(Exhibition entity) {
-		exDao.persist(entity);
-	}
-
-	public void remove(Exhibition entity) {
-		exDao.remove(entity);
-	}
-
-	public Exhibition findById(Long id) {
-		return exDao.findById(id);
-	}
-
-	public void merge(Exhibition entity) {
-		exDao.merge(entity);
-	}
-
+	@Override
 	public Exhibition findExhibition(String title) {
-		return exDao.findExhibition(title);
-	}
-
-	public List<Exhibition> findAll() {
-		return exDao.findAll();
+		try {
+			Exhibition ex = exDao.findExhibition(title);
+			ex.getPaintings().iterator();
+			return ex;
+		} catch (NoResultException ex) {
+			logger.error(ex.getClass().getName() + ":: Ocured while trying to find exhibition with title" + title);
+			throw new ExhibitionNotFoundException(title);
+		}
 	}
 
 	@Override
-	public List<UrlEntityFieldAssistantMatcher> getUrlEntityFieldAssistantMatchers() {
-		List<UrlEntityFieldAssistantMatcher> list = new ArrayList<>();
-		findAll().forEach((exhibition) -> {
-			list.add(new UrlEntityFieldAssistantMatcher(exhibition.getTitle()));
+	public List<Exhibition> getAllExhibition() {
+		return exDao.getAll();
+	}
+
+	@Override
+	public List<UrlEntityMapper> getUrlEntityFieldAssistantMatchers() {
+		List<UrlEntityMapper> list = new ArrayList<>();
+		getAllExhibition().forEach((exhibition) -> {
+			list.add(new BasicUrlEnityMapperDto(exhibition.getTitle()));
 		});
 		return list;
 	}
 
 	@Override
-	public void anounceNewExhibition(ExhibitionAnnounceDto exhibAnounceDTO) {
-
+	public void anounceNewExhibition(ExhibitionDto exhibAnounceDTO) {
 		Exhibition exib = new Exhibition();
 		exib.setDescription(exhibAnounceDTO.getDescription());
 		exib.setTitle(exhibAnounceDTO.getTitle());
 		exib.setStarts(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getStartDate()));
 		exib.setEnds(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getEndDate()));
-		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getEmailAnouncer()));
-		String prefix = localStorageProps.getLocalStoragePathExhibs() + File.separator + exhibAnounceDTO.getTitle()
-				+ File.separator;
-		for (MultipartFile resource : exhibAnounceDTO.getExhiMedia()) {
-			try {
-				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
-				exib.getPaintings().add(new Painting(path.getPathToFile() + path.getFilename()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getUser().getEmail()));
 		exDao.persist(exib);
-		for (MultipartFile resource : exhibAnounceDTO.getExhiMedia()) {
-			try {
-				com.ilya.art.utils.files.Path path = pathAndFileAssistant.getPath(resource);
-				pathAndFileAssistant.saveToFile(prefix, path, resource);
-				exib.getPaintings().add(new Painting(path.getPathToFile() + path.getFilename()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+	}
+
+	@Override
+	public void editExhibition(ExhibitionDto exhibAnounceDTO) {
+		try {
+			Exhibition exib = exDao.getById(exhibAnounceDTO.getId());
+			exib.setDescription(exhibAnounceDTO.getDescription());
+			exib.setTitle(exhibAnounceDTO.getTitle());
+			exib.setStarts(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getStartDate()));
+			exib.setEnds(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getEndDate()));
+			exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getUser().getEmail()));
+		} catch (NoResultException ex) {
+			logger.error(ex.getClass().getName() + " while editiing exhibition with id = " + exhibAnounceDTO.getId());
+			throw new NotFoundException();
 		}
 	}
 
 	@Override
-	public void editExhibition(ExhibitionEditionDto exhibitionDto) {
+	public ExhibitionDto getExhibitionEditionDto(String title) {
+		return new ExhibitionDto(this.findExhibition(title));
 
 	}
 
 	@Override
-	public ExhibitionEditionDto getExhibitionEditionDto(String title) {
-		return new ExhibitionEditionDto(this.findExhibition(title));
-
+	public ExhibitionDto getExhibitionEditionDto(Long id) {
+		return new ExhibitionDto(exDao.getById(id));
 	}
 
-	@Override
-	public ExhibitionEditionDto getExhibitionEditionDto(Long id) {
-		return new ExhibitionEditionDto(this.findById(id));
-	}
-
+	// redo
 	@Override
 	public void deleteExhibition(Long id) {
-		Exhibition exhib = exDao.findById(id);
-		Path directory = Paths.get(localStorageProps.getLocalStoragePathExhibs() + File.separator
-				+ SimpleStringURLEncoderDecoder.decode(exhib.getTitle()));
-		try {
-			Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					Files.delete(file);
-					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					Files.delete(dir);
-					return FileVisitResult.CONTINUE;
-				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Exhibition exhib = exDao.getById(id);
 		exDao.remove(exhib);
+	}
 
+	@Override
+	public List<ExhibitionDto> findAllBasicDto() {
+		List<ExhibitionDto> list = new ArrayList<>();
+		exDao.getAll().forEach((exhibition) -> {
+			list.add(new ExhibitionDto(exhibition));
+		});
+		return list;
+	}
+
+	@Override
+	public List<ExhibitionTitileAndIdDto> getPastExhibitionTitileAndIdDto() {
+		Date currentDate = new Date();
+		List<ExhibitionTitileAndIdDto> list = new ArrayList<>();
+		getAllExhibition().forEach((ex) -> {
+			if (currentDate.after(ex.getEnds())) {
+				list.add(new ExhibitionTitileAndIdDto(ex));
+			}
+		});
+		return list;
+	}
+
+	@Override
+	public List<PaintingDto> getPaintingsOfExhibition(long id) {
+		List<PaintingDto> list = new ArrayList<>();
+		exDao.getById(id).getPaintings().forEach((painting) -> {
+			list.add(new PaintingDto(painting));
+		});
+		return list;
+	}
+
+	@Override
+	public List<UrlEntityMapper> getCurrentExhibitions() {
+		List<UrlEntityMapper> list = new ArrayList<>();
+		Date currentDate = new Date();
+		getAllExhibition().forEach((ex) -> {
+			if (currentDate.after(ex.getStarts()) && currentDate.before(ex.getEnds())) {
+				list.add(new BasicUrlEnityMapperDto(ex.getTitle() + " by " + ex.getAnnouncedBy().getFirstName() + " "
+						+ ex.getAnnouncedBy().getLastName(), Long.toString(ex.getId())));
+			}
+		});
+		return list;
+	}
+
+	@Override
+	public List<UrlEntityMapper> getPastExhibitions() {
+		List<UrlEntityMapper> list = new ArrayList<>();
+		Date currentDate = new Date();
+		getAllExhibition().forEach((ex) -> {
+			if (currentDate.after(ex.getEnds())) {
+				list.add(new BasicUrlEnityMapperDto(ex.getTitle() + " by " + ex.getAnnouncedBy().getFirstName() + " "
+						+ ex.getAnnouncedBy().getLastName(), Long.toString(ex.getId())));
+			}
+		});
+		return list;
+	}
+
+	@Override
+	public List<UrlEntityMapper> getFutureExhibitions() {
+		List<UrlEntityMapper> list = new ArrayList<>();
+		Date currentDate = new Date();
+		getAllExhibition().forEach((ex) -> {
+			if (currentDate.before(ex.getStarts())) {
+				list.add(new BasicUrlEnityMapperDto(ex.getTitle() + " by " + ex.getAnnouncedBy().getFirstName() + " "
+						+ ex.getAnnouncedBy().getLastName(), Long.toString(ex.getId())));
+			}
+		});
+		return list;
+	}
+
+	@Override
+	public ExhibitionDto findExhibition(Long id) {
+		try {
+			Exhibition ex = exDao.getById(id);
+			ex.getPaintings().iterator();
+			return new ExhibitionDto(ex);
+		} catch (NoResultException ex) {
+			logger.error(ex.getClass().getName() + ":: Ocured while trying to find exhibition with id" + id);
+			throw new ExhibitionNotFoundException(Long.toString(id));
+		}
+	}
+
+	@Override
+	public List<UrlEntityMapper> findExhibitionByTitleSubstring(String substring) {
+		List<UrlEntityMapper> list = new ArrayList<>();
+		getAllExhibition().forEach((ex) -> {
+			if (ex.getTitle().toLowerCase().contains(substring.toLowerCase())) {
+				list.add(new BasicUrlEnityMapperDto(ex.getTitle(), Long.toString(ex.getId())));
+			}
+		});
+		return list;
+	}
+
+	@Override
+	public List<ExhibitionTitileAndIdDto> getAllExhibitionTitileAndIdDto() {
+		List<ExhibitionTitileAndIdDto> list = new ArrayList<>();
+		getAllExhibition().forEach((ex) -> {
+			list.add(new ExhibitionTitileAndIdDto(ex));
+		});
+		return list;
 	}
 
 }
