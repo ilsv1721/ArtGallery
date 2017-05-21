@@ -148,9 +148,15 @@
 			value="/WEB-INF/views/jsp/painting/ConcretePaintPage.jsp" />
 	</definition>
 
+
 	<definition name="AboutPage" extends="base-definition">
 		<put-attribute name="title" value="About" />
 		<put-attribute name="body" value="/WEB-INF/views/jsp/AboutPage.jsp" />
+	</definition>
+	
+	<definition name="UserPanelPage" extends="base-definition">
+		<put-attribute name="title" value="User panel" />
+		<put-attribute name="body" value="/WEB-INF/views/jsp/panel/UserPanelPage.jsp" />
 	</definition>
 
 </tiles-definitions>

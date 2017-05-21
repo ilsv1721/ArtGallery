@@ -1,6 +1,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
+<p>
+	<security:authorize access="isAuthenticated()">
+    Authenticated as <b><security:authentication
+			property="principal.username" />
+	</security:authorize></b>
+</p>
+
+<security:authorize access="hasRole('ROLE_USER')">
+	<label><b>User panel:</b></label>
+	<div class="w3-panel w3-border w3-padding">
+		<a href="<c:url context ="/art/panel" value="/userpanel"/>"
+			class="w3-button w3-blue">Edit user info</a>
+	</div>
+</security:authorize>
+
 
 <security:authorize access="hasRole('ROLE_MANAGER')">
 	<label><b>Manager panel:</b></label>
@@ -32,8 +47,8 @@
 		</p>
 		<a href="<c:url context ="/art/panel" value="/genre"/>"
 			class="w3-button w3-blue">Genre panel</a> <a
-			href="<c:url context ="/art/panel" value="/role"/>" class="w3-button w3-blue">Role
-			panel</a>
+			href="<c:url context ="/art/panel" value="/role"/>"
+			class="w3-button w3-blue">Role panel</a>
 	</div>
 
 </security:authorize>

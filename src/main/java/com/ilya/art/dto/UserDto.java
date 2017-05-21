@@ -1,8 +1,14 @@
 package com.ilya.art.dto;
 
+import java.io.Serializable;
+
 import com.ilya.art.domain.User;
 
-public class UserDto {
+public class UserDto implements Serializable {
+
+	private static final long serialVersionUID = -4408340045040147956L;
+
+	private long id;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -10,14 +16,15 @@ public class UserDto {
 	public UserDto() {
 	}
 
-	public UserDto(String firstName, String lastName, String email) {
-		super();
+	public UserDto(String firstName, String lastName, String email, int id) {
+		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 	}
 
 	public UserDto(User author) {
+		this.id = author.getId();
 		this.firstName = author.getFirstName();
 		this.lastName = author.getLastName();
 		this.email = author.getEmail();
@@ -45,6 +52,14 @@ public class UserDto {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

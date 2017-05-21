@@ -1,6 +1,7 @@
 package com.ilya.art.webcontrollers;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -31,16 +32,21 @@ import com.ilya.art.dto.PaintingDto;
 import com.ilya.art.dto.PaintingMetaDto;
 import com.ilya.art.dto.RoleDto;
 import com.ilya.art.dto.RoleEditDto;
+import com.ilya.art.dto.UserDto;
 import com.ilya.art.services.interfaces.ExhibitionService;
 import com.ilya.art.services.interfaces.GenreService;
 import com.ilya.art.services.interfaces.NewsService;
 import com.ilya.art.services.interfaces.PaintingService;
 import com.ilya.art.services.interfaces.RoleService;
+import com.ilya.art.services.interfaces.UserService;
 import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Controller
 @RequestMapping(value = "/panel")
 public class PanelController {
+
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	ExhibitionService exhibitionService;
@@ -273,6 +279,26 @@ public class PanelController {
 	public @ResponseBody String editPaintingEdit(Long id) {
 		paintingService.deletePainting(id);
 		return "ok";
+	}
+
+	@RequestMapping(value = "/userpanel", method = RequestMethod.GET)
+	public String getUserPanel(Model model, Principal principal) {
+		model.addAttribute("user", userService.getUserDtoByEmail(principal.getName()));
+		return "UserPanelPage";
+	}
+
+	@RequestMapping(value = "/userpanel", method = RequestMethod.POST)
+	public String processUserPanel(@Valid UserDto userdto, BindingResult res) {
+		if (!res.hasErrors()) {
+			userService.changeUserInfo(userdto);
+		}
+		return "redirect:/panel/userpanel";
+	}
+
+	@RequestMapping(value = "/userpanel/editpass", method = RequestMethod.POST)
+	public @ResponseBody String changePassword(Long userId, String password) {
+		userService.changePassword(userId, password);
+		return "oK";
 	}
 
 }

@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 
+	//THINK ABOUT CHANGES blabla has role bla bla
 	protected void configure(HttpSecurity http) throws Exception {
 		http.formLogin().loginPage("/login").defaultSuccessUrl("/").and().rememberMe().tokenValiditySeconds(2419200)
 				.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/")

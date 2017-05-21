@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.User;
 import com.ilya.art.dto.UserDetailsDto;
+import com.ilya.art.dto.UserDto;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.RoleDao;
 import com.ilya.art.repositories.interfaces.UserDao;
 
@@ -66,6 +68,46 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 			return true;
 		} catch (NoResultException ex) {
 			return false;
+		}
+	}
+
+	@Override
+	public UserDto getUserDtoByEmail(String email) {
+		try {
+			return new UserDto(userDao.findByEmail(email));
+		} catch (NoResultException ex) {
+			throw new NotFoundException();
+		}
+	}
+
+	@Override
+	public void changePassword(Long userId, String newPassword) {
+		try {
+			User userToChange = userDao.getById(userId);
+			userToChange.setPassword(passwordEncoder.encode(newPassword));
+		} catch (NoResultException ex) {
+			throw new NotFoundException();
+		}
+	}
+
+	@Override
+	public void changePassword(String userEmail, String newPassword) {
+		try {
+			User userToChange = userDao.findByEmail(userEmail);
+			userToChange.setPassword(passwordEncoder.encode(newPassword));
+		} catch (NoResultException ex) {
+			throw new NotFoundException();
+		}
+	}
+
+	@Override
+	public void changeUserInfo(UserDto userDto) {
+		try {
+			User userToChange = userDao.getById(userDto.getId());
+			userToChange.setFirstName(userDto.getFirstName());
+			userToChange.setLastName(userDto.getLastName());
+		} catch (NoResultException ex) {
+			throw new NotFoundException();
 		}
 	}
 
