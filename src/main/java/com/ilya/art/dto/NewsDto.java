@@ -3,6 +3,8 @@ package com.ilya.art.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.Size;
+
 import com.ilya.art.domain.News;
 
 public class NewsDto implements Serializable {
@@ -11,8 +13,10 @@ public class NewsDto implements Serializable {
 
 	private long id;
 	private Date publishedDate = new Date();
+	@Size(min = 1)
 	private String text;
 	private UserDto author;
+	@Size(min = 1, max = 20)
 	private String title;
 
 	public NewsDto() {
@@ -27,8 +31,6 @@ public class NewsDto implements Serializable {
 		this.title = news.getTitle();
 
 	}
-	
-	
 
 	public long getId() {
 		return id;

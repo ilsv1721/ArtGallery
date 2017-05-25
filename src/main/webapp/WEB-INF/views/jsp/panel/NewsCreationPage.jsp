@@ -17,14 +17,9 @@
 		</p>
 
 		<p>
-	
-		<label><b>By (user email)</b></label>
-		<input class="w3-input w3-border w3-hover-pale-blue" name="author.email" />
-		</p>
+			<label><b>Text</b></label>
+			<textarea class="w3-input w3-border w3-hover-pale-blue" name="text"></textarea>
 
-		<p>
-			<label><b>Text</b></label> <input
-				class="w3-input w3-border w3-hover-pale-blue" name="text" />
 		</p>
 
 		<p>

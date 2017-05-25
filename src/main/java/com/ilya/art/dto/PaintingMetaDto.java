@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import com.ilya.art.domain.Painting;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 
@@ -13,12 +15,13 @@ public class PaintingMetaDto implements Serializable {
 
 	private long id;
 	private DateDto creationDate;
+	@Size(min = 1, max = 20)
 	private String title;
+	@Size(min = 1, max = 20)
 	private String description;
 	private List<Long> exhibitionsId = new ArrayList<>();
 	private List<Long> genresId = new ArrayList<>();
 	private UserDto author;
-	
 
 	public PaintingMetaDto(Painting painting) {
 		this.creationDate = DateDtoDateJavaConverter.convert(painting.getCreationdate());
@@ -33,7 +36,7 @@ public class PaintingMetaDto implements Serializable {
 			genresId.add(genre.getId());
 		});
 		this.author = new UserDto(painting.getAuthor());
-		
+
 	}
 
 	public PaintingMetaDto() {

@@ -1,7 +1,11 @@
 package com.ilya.art.services.interfaces;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.ilya.art.dto.RoleDto;
 import com.ilya.art.dto.UserDetailsDto;
 import com.ilya.art.dto.UserDto;
 
@@ -9,16 +13,22 @@ public interface UserService extends UserDetailsService {
 
 	void registerNewUser(UserDetailsDto userDetailsDto);
 
-	public boolean validateUniqueByEmail(String emailString);
+	boolean validateUniqueByEmail(String emailString);
 
-	public boolean validateExistByEmail(String emailString);
+	boolean validateExistByEmail(String emailString);
 
-	public UserDto getUserDtoByEmail(String email);
+	UserDto getUserDtoByEmail(String email);
 
-	public void changePassword(Long userId, String newPassword);
+	void changePassword(Long userId, String newPassword);
 
-	public void changePassword(String userEmail, String newPassword);
+	void changePassword(String userEmail, String newPassword);
 
-	public void changeUserInfo(UserDto userDto);
+	void changeUserInfo(UserDto userDto);
+
+	List<RoleDto> getUserRoles(Long userId);
+
+	List<RoleDto> getUserRoles(String userEmail);
+
+	void chageRole(String userEmail, List<Long> list);
 
 }

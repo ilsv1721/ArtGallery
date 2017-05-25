@@ -54,7 +54,7 @@
 
 	<sf:form method="POST" modelAttribute="userDetailsDto"
 		class="w3-container" id="regForm">
-		
+
 		<p>
 			<label class="ilay-smc">First Name:</label>
 		</p>
@@ -92,28 +92,5 @@
 			<input type="submit" value="Register" class="w3-btn w3-blue-grey">
 		</p>
 	</sf:form>
-
-	<div class="w3-card-4">
-
-		<div class="w3-container w3-cyan w3-center ilya-smc">
-			<h2>Delete role</h2>
-		</div>
-		<form action="deleteRole" method="post" class="w3-container w3-center"
-			id="deleteForm">
-			<p>
-
-				<select class="w3-select w3-border" name="role">
-					<option value=" " disabled selected>Choose role</option>
-					<c:forEach items="${RoleList}" var="roles">
-						<option value="${roles.role}">${roles.role}</option>
-					</c:forEach>
-				</select>
-			</p>
-			<p>
-				<input type="submit" value="Delete Role"
-					class="w3-button w3-hover-red" />
-			</p>
-		</form>
-	</div>
 
 </div>

@@ -12,7 +12,7 @@ public interface PaintingService {
 
 	PaintingDto getRandomPainting();
 
-	void deletePainting(Long id);
+	void deletePainting(Long paintId, Long exhibitionId);
 
 	boolean validateUnique(String path);
 

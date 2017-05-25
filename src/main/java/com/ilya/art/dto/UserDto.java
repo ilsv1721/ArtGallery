@@ -2,6 +2,8 @@ package com.ilya.art.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Size;
+
 import com.ilya.art.domain.User;
 
 public class UserDto implements Serializable {
@@ -9,8 +11,11 @@ public class UserDto implements Serializable {
 	private static final long serialVersionUID = -4408340045040147956L;
 
 	private long id;
+	@Size(min = 1, max = 40)
 	private String firstName;
+	@Size(min = 1, max = 40)
 	private String lastName;
+	@Size(min = 1, max = 40)
 	private String email;
 
 	public UserDto() {

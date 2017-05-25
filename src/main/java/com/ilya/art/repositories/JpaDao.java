@@ -5,13 +5,14 @@ import java.lang.reflect.ParameterizedType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.Dao;
 
 /**
- * This class represents basic Jpa DAO functionality with underneath usage of
- * hardcoded reflection API.
- * 
- * @author ilya
+ * Basic JpaDao implementation.
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class JpaDao<E, K> implements Dao<E, K> {
@@ -20,6 +21,8 @@ public abstract class JpaDao<E, K> implements Dao<E, K> {
 
 	@PersistenceContext
 	protected EntityManager entityManager;
+
+	protected static Logger logger = LogManager.getLogger(JpaDao.class);
 
 	public JpaDao() {
 		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
@@ -38,14 +41,17 @@ public abstract class JpaDao<E, K> implements Dao<E, K> {
 
 	@Override
 	public E getById(K id) {
-		return (E) entityManager.find(entityClass, id);
+		E entity = (E) entityManager.find(entityClass, id);
+		if (entity == null) {
+			logger.error("NotFounException :: In JpaDao while trying to find entity with id " + id);
+			throw new NotFoundException();
+		}
+		return entity;
 	}
 
 	@Override
 	public void merge(E entity) {
 		entityManager.merge(entity);
 	}
-	
-
 
 }

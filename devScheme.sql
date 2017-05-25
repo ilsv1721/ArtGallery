@@ -1,8 +1,12 @@
 
--- -----------------------------------------------------
--- Table users
--- -----------------------------------------------------
-DROP TABLE IF EXISTS users ;
+DROP TABLE IF EXISTS paintings_exhibition ;
+DROP TABLE IF EXISTS paintings_genres ;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS paintings;
+DROP TABLE IF EXISTS news ;
+DROP TABLE IF EXISTS exhibitions;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS genres;
 
 CREATE TABLE IF NOT EXISTS users (
   user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -35,7 +39,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table user_roles
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS user_roles ;
+
 
 CREATE TABLE IF NOT EXISTS user_roles (
   user_id INT UNSIGNED NOT NULL,
@@ -52,12 +56,6 @@ CREATE TABLE IF NOT EXISTS user_roles (
 ENGINE = InnoDB;
 
 
-
--- -----------------------------------------------------
--- Table genres
--- -----------------------------------------------------
-DROP TABLE IF EXISTS genres ;
-
 CREATE TABLE IF NOT EXISTS genres (
  genre_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   genre VARCHAR(70) NOT NULL unique,
@@ -71,11 +69,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table exhibitions
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS exhibitions ;
+
 
 CREATE TABLE IF NOT EXISTS exhibitions (
   exhibition_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  title VARCHAR(255) NOT NULL UNIQUE,
+  title VARCHAR(255) NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   description TEXT NULL,
@@ -90,7 +88,6 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table news
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS news ;
 
 CREATE TABLE IF NOT EXISTS news (
   news_id INT NOT NULL AUTO_INCREMENT,
@@ -106,9 +103,6 @@ publish_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-
-DROP TABLE IF EXISTS paintings ;
 
 CREATE TABLE IF NOT EXISTS paintings (
   painting_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -131,7 +125,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table paintings_exhibition
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS paintings_exhibition ;
+
 
 CREATE TABLE IF NOT EXISTS paintings_exhibition (
   painting_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -155,7 +149,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table paintegs_genres
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS paintings_genres ;
+
 
 CREATE TABLE IF NOT EXISTS paintings_genres (
   painting_id INT UNSIGNED,
@@ -181,6 +175,7 @@ ENGINE = InnoDB;
 Insert into users (first_name, last_name, user_password, email, creation_date) values ("John", "Moo", "$2a$10$/0LvFCNtEf4StzpxWEQaWOamEQdY43fgiFivrs2iNd3zy1/9VJFVa", "john@manager.com","2008-10-03");
 Insert into users (first_name, last_name, user_password, email, creation_date) values ("Sara","Kendrick", "$2a$10$/0LvFCNtEf4StzpxWEQaWOamEQdY43fgiFivrs2iNd3zy1/9VJFVa", "sara@manager.com","2009-10-03");
 Insert into users (first_name, last_name, user_password, email, creation_date) values ("Mike","Polo", "$2a$10$/0LvFCNtEf4StzpxWEQaWOamEQdY43fgiFivrs2iNd3zy1/9VJFVa", "mike@manager.com","2012-10-03");
+Insert into users (first_name, last_name, user_password, email, creation_date) values ("Emma","Smith", "$2a$10$/0LvFCNtEf4StzpxWEQaWOamEQdY43fgiFivrs2iNd3zy1/9VJFVa", "emma@admin.com","2007-11-04");
 
 insert into roles (role) values ("ROLE_USER");
 insert into roles (role) values ("ROLE_MANAGER");
@@ -192,6 +187,10 @@ Insert into user_roles(user_id, role_id) values ("2", "1");
 Insert into user_roles(user_id, role_id) values ("2", "2");
 Insert into user_roles(user_id, role_id) values ("3", "1");
 Insert into user_roles(user_id, role_id) values ("3", "2");
+Insert into user_roles(user_id, role_id) values ("4", "1");
+Insert into user_roles(user_id, role_id) values ("4", "2");
+Insert into user_roles(user_id, role_id) values ("4", "3");
+
 
 Insert into exhibitions (title, description, announced_by, start_date, end_date) values ("Fantasy", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam elementum commodo enim ac suscipit. Donec lacinia pretium massa sit amet fermentum. Vivamus finibus felis a lacinia egestas. Sed in feugiat odio, quis ultrices odio. Integer euismod velit interdum ligula consequat, tempus hendrerit est auctor. Nulla euismod mi sit amet lorem maximus accumsan eu at sapien. Pellentesque laoreet nisi sit amet lacus malesuada dictum eu sed nisi. Cras sagittis dui lectus, quis aliquet lorem feugiat in. Aenean tempus ipsum sem. ", 1,"2008-10-03","2008-12-03");
 Insert into exhibitions (title, description, announced_by, start_date, end_date) values ("Quatro", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam elementum commodo enim ac suscipit. Donec lacinia pretium massa sit amet fermentum. Vivamus finibus felis a lacinia egestas. Sed in feugiat odio, quis ultrices odio. Integer euismod velit interdum ligula consequat, tempus hendrerit est auctor. Nulla euismod mi sit amet lorem maximus accumsan eu at sapien. Pellentesque laoreet nisi sit amet lacus malesuada dictum eu sed nisi. Cras sagittis dui lectus, quis aliquet lorem feugiat in. Aenean tempus ipsum sem. ", 2,"1994-10-03","2012-12-03");

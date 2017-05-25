@@ -2,6 +2,7 @@ package com.ilya.art.webcontrollers;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -33,13 +34,14 @@ import com.ilya.art.dto.PaintingMetaDto;
 import com.ilya.art.dto.RoleDto;
 import com.ilya.art.dto.RoleEditDto;
 import com.ilya.art.dto.UserDto;
+import com.ilya.art.dto.UserRolesEditDto;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.services.interfaces.ExhibitionService;
 import com.ilya.art.services.interfaces.GenreService;
 import com.ilya.art.services.interfaces.NewsService;
 import com.ilya.art.services.interfaces.PaintingService;
 import com.ilya.art.services.interfaces.RoleService;
 import com.ilya.art.services.interfaces.UserService;
-import com.ilya.art.utils.SimpleStringURLEncoderDecoder;
 
 @Controller
 @RequestMapping(value = "/panel")
@@ -75,10 +77,15 @@ public class PanelController {
 	}
 
 	@RequestMapping(value = "/exhibcreator", method = RequestMethod.POST)
-	String process(HttpServletRequest request, @Valid @ModelAttribute("exhibAnounceDTO") ExhibitionDto exhibEditionDTO,
-			Errors errors) throws IllegalStateException, IOException {
-		exhibitionService.anounceNewExhibition(exhibEditionDTO);
-		return ("redirect:/panel/");
+	String process(HttpServletRequest request, @Valid @ModelAttribute("exhibAnounceDTO") ExhibitionDto exhibDTO,
+			BindingResult res, Principal principal) throws IllegalStateException, IOException {
+		if (!res.hasErrors()) {
+			exhibDTO.setUser(userService.getUserDtoByEmail(principal.getName()));
+			exhibitionService.anounceNewExhibition(exhibDTO);
+			return ("redirect:/panel/");
+		}
+		return ("redirect:/panel/exhibcreator");
+
 	}
 
 	@RequestMapping(value = "/chooser", method = RequestMethod.GET)
@@ -99,19 +106,21 @@ public class PanelController {
 		return "ExhibitionEditionChoosePage";
 	}
 
-	@RequestMapping(value = "/exhibeditor/{exhibFormatedTitle}", method = RequestMethod.GET)
-	String getExhibitionEditionPage(@PathVariable String exhibFormatedTitle, Model model) {
-		model.addAttribute("exhibEditionDTO",
-				exhibitionService.getExhibitionEditionDto(SimpleStringURLEncoderDecoder.decode(exhibFormatedTitle)));
+	@RequestMapping(value = "/exhibeditor/{exhibId}", method = RequestMethod.GET)
+	String getExhibitionEditionPage(@PathVariable Long exhibId, Model model) {
+		model.addAttribute("exhibEditionDTO", exhibitionService.findExhibition(exhibId));
 		return "ExhibitionEditionPage";
 	}
 
 	@RequestMapping(value = "/exhibeditor/{exhibFormatedTitle}", method = RequestMethod.POST)
 	String exhibitionEdition(@PathVariable String exhibFormatedTitle,
-			@ModelAttribute("exhibEditionDTO") ExhibitionDto exhibitionEditionDto, RedirectAttributes redirects) {
-		exhibitionService.editExhibition(exhibitionEditionDto);
-		redirects.addFlashAttribute("statusOfPreviousOperation", "Success");
-		return "redirect:/panel/";
+			@ModelAttribute("exhibEditionDTO") ExhibitionDto exhibitionEditionDto, BindingResult res) {
+		if (!res.hasErrors()) {
+			exhibitionService.editExhibition(exhibitionEditionDto);
+			return "redirect:/panel/";
+		}
+		return "redirect:/panel/{exhibFormatedTitle}";
+
 	}
 
 	@RequestMapping(value = "/deletion/del", method = RequestMethod.POST)
@@ -133,9 +142,15 @@ public class PanelController {
 	}
 
 	@RequestMapping(value = "/newscreate", method = RequestMethod.POST)
-	public String createNews(@Valid @ModelAttribute("NewsDto") NewsDto newsDto, Errors errors) {
-		newsService.persistNews(newsDto);
-		return "redirect:/panel/";
+	public String createNews(@Valid @ModelAttribute("NewsDto") NewsDto newsDto, Errors errors, Principal principal,
+			BindingResult res) {
+		if (!res.hasErrors()) {
+			newsDto.setAuthor(userService.getUserDtoByEmail(principal.getName()));
+			newsService.persistNews(newsDto);
+			return "redirect:/panel/";
+		}
+		return "NewsCreationPage";
+
 	}
 
 	@RequestMapping(value = "/newseditor/{newsId}", method = RequestMethod.GET)
@@ -146,10 +161,14 @@ public class PanelController {
 
 	@RequestMapping(value = "/newseditor/{newsId}", method = RequestMethod.POST)
 	String newsEdition(@PathVariable long newsId, @ModelAttribute("NewsDto") NewsDto newsDto,
-			RedirectAttributes redirects) {
-		newsService.editNews(newsDto);
-		redirects.addFlashAttribute("statusOfPreviousOperation", "Success");
-		return "redirect:/panel/";
+			RedirectAttributes redirects, BindingResult res) {
+		if (!res.hasErrors()) {
+			newsService.editNews(newsDto);
+			redirects.addFlashAttribute("statusOfPreviousOperation", "Success");
+			return "redirect:/panel/";
+		} else {
+			return "redirect:/panel/newseditor/{newsId}";
+		}
 	}
 
 	@RequestMapping(value = "/addGenre", method = RequestMethod.POST)
@@ -171,7 +190,7 @@ public class PanelController {
 			try {
 				genreService.deleteGenre(genre);
 				return "Deleted";
-			} catch (EntityNotFoundException ex) {
+			} catch (NotFoundException ex) {
 				return "This genre does not exist";
 			}
 		} else
@@ -184,7 +203,7 @@ public class PanelController {
 			try {
 				genreService.editGenre(genreEditDto);
 				return "Changed";
-			} catch (EntityNotFoundException ex) {
+			} catch (NotFoundException ex) {
 				return "This genre does not exist.";
 			}
 		} else
@@ -197,13 +216,13 @@ public class PanelController {
 		return "GenrePanelPage";
 	}
 
-	@RequestMapping(value = "/role", method = RequestMethod.GET)
+	@RequestMapping(value = "admin/role", method = RequestMethod.GET)
 	String RolePanelPage(Model model) {
 		model.addAttribute("RoleList", roleService.getAllDto());
 		return "RolePanelPage";
 	}
 
-	@RequestMapping(value = "/addRole", method = RequestMethod.POST)
+	@RequestMapping(value = "admin/addRole", method = RequestMethod.POST)
 	public @ResponseBody String addRole(@Valid @RequestBody RoleDto role, BindingResult res) {
 		if (!res.hasErrors()) {
 			try {
@@ -216,20 +235,20 @@ public class PanelController {
 			return "Validate errors: " + res.getErrorCount();
 	}
 
-	@RequestMapping(value = "/deleteRole", method = RequestMethod.POST)
+	@RequestMapping(value = "admin/deleteRole", method = RequestMethod.POST)
 	public @ResponseBody String deleteRole(@Valid @RequestBody RoleDto role, BindingResult res) {
 		if (!res.hasErrors()) {
 			try {
 				roleService.deleteGenre(role);
 				return "Deleted";
-			} catch (EntityNotFoundException ex) {
+			} catch (NotFoundException ex) {
 				return "This role does not exist";
 			}
 		} else
 			return "Validate errors: " + res.getErrorCount();
 	}
 
-	@RequestMapping(value = "/editRole", method = RequestMethod.POST)
+	@RequestMapping(value = "admin/editRole", method = RequestMethod.POST)
 	public @ResponseBody String editRole(@Valid @RequestBody RoleEditDto roleEditDto, BindingResult res) {
 		if (!res.hasErrors()) {
 			try {
@@ -276,8 +295,8 @@ public class PanelController {
 	}
 
 	@RequestMapping(value = "/paintingdelete", method = RequestMethod.POST)
-	public @ResponseBody String editPaintingEdit(Long id) {
-		paintingService.deletePainting(id);
+	public @ResponseBody String editPaintingEdit(Long paintId, Long exhibitionId) {
+		paintingService.deletePainting(paintId, exhibitionId);
 		return "ok";
 	}
 
@@ -299,6 +318,24 @@ public class PanelController {
 	public @ResponseBody String changePassword(Long userId, String password) {
 		userService.changePassword(userId, password);
 		return "oK";
+	}
+
+	@RequestMapping(value = "/admin/roleeditor", method = RequestMethod.GET)
+	public String getRoleEditorPage(Model model) {
+		model.addAttribute("allRoles", roleService.getAllDto());
+		return "UserRoleEditorPage";
+	}
+
+	@RequestMapping(value = "/admin/roleeditor", method = RequestMethod.POST)
+	public @ResponseBody String processRoleEdition(@Valid @RequestBody UserRolesEditDto userRoles) {
+		userService.chageRole(userRoles.getUserEmail(), userRoles.getNewRoles());
+		return "Ok";
+	}
+
+	@RequestMapping(value = "/admin/rolesofuser", method = RequestMethod.GET)
+	public @ResponseBody List<RoleDto> getRolesOfUser(String userEmail) {
+		List<RoleDto> roles = userService.getUserRoles(userEmail);
+		return roles;
 	}
 
 }

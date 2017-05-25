@@ -148,10 +148,19 @@ public class User {
 		this.paintings = paintings;
 	}
 
+	public boolean getActiveStatus() {
+		return activeStatus;
+	}
+
+	public void setActiveStatus(boolean activeStatus) {
+		this.activeStatus = activeStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
@@ -160,51 +169,39 @@ public class User {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (!(obj instanceof User)) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		User other = (User) obj;
+		if (creationDate == null) {
+			if (other.creationDate != null)
+				return false;
+		} else if (!creationDate.equals(other.creationDate))
+			return false;
 		if (email == null) {
-			if (other.email != null) {
+			if (other.email != null)
 				return false;
-			}
-		} else if (!email.equals(other.email)) {
+		} else if (!email.equals(other.email))
 			return false;
-		}
 		if (firstName == null) {
-			if (other.firstName != null) {
+			if (other.firstName != null)
 				return false;
-			}
-		} else if (!firstName.equals(other.firstName)) {
+		} else if (!firstName.equals(other.firstName))
 			return false;
-		}
 		if (lastName == null) {
-			if (other.lastName != null) {
+			if (other.lastName != null)
 				return false;
-			}
-		} else if (!lastName.equals(other.lastName)) {
+		} else if (!lastName.equals(other.lastName))
 			return false;
-		}
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
-	}
-
-	public boolean getActiveStatus() {
-		return activeStatus;
-	}
-
-	public void setActiveStatus(boolean activeStatus) {
-		this.activeStatus = activeStatus;
+		return "User [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + "]";
 	}
 
 }

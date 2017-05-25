@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.NoResultException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +19,11 @@ import com.ilya.art.config.utils.LocalStorageProps;
 import com.ilya.art.domain.Exhibition;
 import com.ilya.art.domain.Genre;
 import com.ilya.art.domain.Painting;
+import com.ilya.art.dto.BasicUrlEnityMapperDto;
 import com.ilya.art.dto.PaintingDto;
 import com.ilya.art.dto.PaintingMetaDto;
-import com.ilya.art.dto.BasicUrlEnityMapperDto;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.exceptions.PaintingNotFoundException;
 import com.ilya.art.repositories.interfaces.ExhibitionDao;
 import com.ilya.art.repositories.interfaces.GenreDao;
@@ -115,7 +114,7 @@ public class PaintingService implements com.ilya.art.services.interfaces.Paintin
 		try {
 			paintingDao.findByPath(path);
 			return false;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return true;
 		}
 	}
@@ -143,36 +142,35 @@ public class PaintingService implements com.ilya.art.services.interfaces.Paintin
 			}
 			paint.setGenre(relatedGenres);
 
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			throw new PaintingNotFoundException();
 		}
 	}
 
 	@Override
-	public void deletePainting(Long id) {
+	public void deletePainting(Long paintId, Long exhibitionId) {
 		try {
-			System.out.println(id);
-			Painting paint = paintingDao.getById(id);
+			Painting paint = paintingDao.getById(paintId);
 			paint.getGenre().forEach((genre) -> {
 				genre.getPaintingsWithThisGenre().remove(paint);
 			});
 
-			paint.getExhibitions().forEach((exhib) -> {
-				exhib.getPaintings().remove(paint);
-			});
+			Exhibition exhibDeleteFrom = exibitionDao.getById(exhibitionId);
+			exhibDeleteFrom.getPaintings().remove(paint);
+			paint.getExhibitions().remove(exhibDeleteFrom);
 
-			try {
-				System.out.println(id);
-				pathAndFileAssistant
-						.deleteFile(Paths.get(localStorageProps.getLocalStoragePathExhibs() + paint.getPath()));
-			} catch (IOException ex) {
-				logger.error(ex.getClass().getName() + " while trying to delete painting by id = " + id);
+			if (paint.getExhibitions().isEmpty()) {
+				try {
+					pathAndFileAssistant
+							.deleteFile(Paths.get(localStorageProps.getLocalStoragePathExhibs() + paint.getPath()));
+					paintingDao.remove(paint);
+				} catch (IOException ex) {
+					logger.error(ex.getClass().getName() + " while trying to delete painting by id = " + paintId);
+				}
 			}
 
-			paintingDao.remove(paint);
-
-		} catch (NoResultException ex) {
-			logger.error(ex.getClass().getName() + " while trying to delete painting by id = " + id);
+		} catch (NotFoundException ex) {
+			logger.error(ex.getClass().getName() + " while trying to delete painting by id = " + paintId);
 			throw new PaintingNotFoundException();
 		}
 
@@ -183,7 +181,7 @@ public class PaintingService implements com.ilya.art.services.interfaces.Paintin
 		try {
 			paintingDao.getById(id);
 			return true;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return false;
 		}
 	}
@@ -193,7 +191,7 @@ public class PaintingService implements com.ilya.art.services.interfaces.Paintin
 		try {
 			paintingDao.findByPath(path);
 			return true;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return false;
 		}
 	}
@@ -202,7 +200,7 @@ public class PaintingService implements com.ilya.art.services.interfaces.Paintin
 	public PaintingDto getById(Long id) {
 		try {
 			return new PaintingDto(paintingDao.getById(id));
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			logger.error(ex.getClass().getName() + " while trying to find painting by id = " + id);
 			throw new PaintingNotFoundException();
 		}

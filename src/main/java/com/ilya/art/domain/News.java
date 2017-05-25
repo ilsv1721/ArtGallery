@@ -90,4 +90,55 @@ public class News {
 		this.publishDate = publishDate;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + ((publishDate == null) ? 0 : publishDate.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((writtenBy == null) ? 0 : writtenBy.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		News other = (News) obj;
+		if (content == null) {
+			if (other.content != null)
+				return false;
+		} else if (!content.equals(other.content))
+			return false;
+		if (publishDate == null) {
+			if (other.publishDate != null)
+				return false;
+		} else if (!publishDate.equals(other.publishDate))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (writtenBy == null) {
+			if (other.writtenBy != null)
+				return false;
+		} else if (!writtenBy.equals(other.writtenBy))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "News [title=" + title + ", publishDate=" + publishDate + ", content=" + content + ", writtenBy="
+				+ writtenBy + "]";
+	}
+	
+	
+
 }

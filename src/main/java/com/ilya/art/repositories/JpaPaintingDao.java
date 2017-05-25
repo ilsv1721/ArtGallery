@@ -3,12 +3,14 @@ package com.ilya.art.repositories;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Repository;
 
 import com.ilya.art.domain.Painting;
 import com.ilya.art.domain.User;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.PaintingDao;
 
 @Repository
@@ -33,7 +35,15 @@ public class JpaPaintingDao extends JpaDao<Painting, Long> implements PaintingDa
 		TypedQuery<Painting> query = entityManager.createQuery("from Painting p where p.path = :path_search",
 				Painting.class);
 		query.setParameter("path_search", path);
-		return query.getSingleResult();
+		try {
+			Painting painting = query.getSingleResult();
+			return painting;
+		} catch (NoResultException ex) {
+			
+			logger.error(ex.getClass().getName() + " :: while trying to get painting with path = " + path);
+			throw new NotFoundException();
+		}
+
 	}
 
 	@Override
@@ -41,7 +51,13 @@ public class JpaPaintingDao extends JpaDao<Painting, Long> implements PaintingDa
 		TypedQuery<Painting> query = entityManager.createQuery("from Painting p where p.author = :author_search",
 				Painting.class);
 		query.setParameter("author_search", user);
-		return query.getSingleResult();
+		try {
+			Painting painting = query.getSingleResult();
+			return painting;
+		} catch (NoResultException ex) {
+			logger.error(ex.getClass().getName() + " :: while trying to get painting with author= " + user);
+			throw new NotFoundException();
+		}
 	}
 
 	@Override

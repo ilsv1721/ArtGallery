@@ -11,35 +11,36 @@ import com.ilya.art.utils.web.UrlEntityMapper;
 
 public interface ExhibitionService extends EntityMetaURLMappable {
 
-	public Exhibition findExhibition(String title);
+	Exhibition getById(Long id);
 
-	public ExhibitionDto findExhibition(Long id);
+	Exhibition getByTitle(String title);
 
-	public List<Exhibition> getAllExhibition();
+	ExhibitionDto findExhibition(String title);
 
-	public List<ExhibitionTitileAndIdDto> getPastExhibitionTitileAndIdDto();
+	ExhibitionDto findExhibition(Long id);
 
-	public List<ExhibitionTitileAndIdDto> getAllExhibitionTitileAndIdDto();
+	List<Exhibition> getAllExhibition();
 
-	public List<ExhibitionDto> findAllBasicDto();
+	List<ExhibitionTitileAndIdDto> getPastExhibitionTitileAndIdDto();
 
-	public void anounceNewExhibition(ExhibitionDto exhibAnounceDTO);
+	List<ExhibitionTitileAndIdDto> getAllExhibitionTitileAndIdDto();
 
-	public void editExhibition(ExhibitionDto exDto);
+	List<ExhibitionDto> findAllBasicDto();
 
-	public ExhibitionDto getExhibitionEditionDto(String titile);
+	void anounceNewExhibition(ExhibitionDto exhibAnounceDTO);
 
-	public ExhibitionDto getExhibitionEditionDto(Long id);
+	void editExhibition(ExhibitionDto exDto);
 
-	public void deleteExhibition(Long id);
+	void deleteExhibition(Long id);
 
-	public List<PaintingDto> getPaintingsOfExhibition(long id);
+	List<PaintingDto> getPaintingsOfExhibition(long id);
 
-	public List<UrlEntityMapper> getCurrentExhibitions();
+	List<UrlEntityMapper> getCurrentExhibitions();
 
-	public List<UrlEntityMapper> getPastExhibitions();
+	List<UrlEntityMapper> getPastExhibitions();
 
-	public List<UrlEntityMapper> getFutureExhibitions();
+	List<UrlEntityMapper> getFutureExhibitions();
 
-	public List<UrlEntityMapper> findExhibitionByTitleSubstring(String substring);
+	List<UrlEntityMapper> findExhibitionByTitleSubstring(String substring);
+
 }

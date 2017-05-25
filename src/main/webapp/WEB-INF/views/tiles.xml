@@ -52,7 +52,8 @@
 
 	<definition name="PanelPage" extends="base-definition">
 		<put-attribute name="title" value="ControlPanel" />
-		<put-attribute name="body" value="/WEB-INF/views/jsp/panel/PanelPage.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/PanelPage.jsp" />
 	</definition>
 
 	<definition name="ExhibitionCreationPage" extends="base-definition">
@@ -104,14 +105,14 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/jsp/exceptions/NotFoundPage.jsp" />
 	</definition>
-	
+
 	<definition name="InternalServerErrorPage" extends="base-definition">
 		<put-attribute name="title" value="Lets praise the ADMINS!" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/jsp/exceptions/InternalServerErrorPage.jsp" />
 	</definition>
-	
-   <definition name="NewPaintingPage" extends="base-definition">
+
+	<definition name="NewPaintingPage" extends="base-definition">
 		<put-attribute name="title" value="New painting" />
 		<put-attribute name="body"
 			value="/WEB-INF/views/jsp/panel/NewPaintingPage.jsp" />
@@ -135,7 +136,14 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/jsp/gallery/GalleryByExhibitionPage.jsp" />
 	</definition>
-
+	
+	
+	<definition name="GalleryByGenrePage" extends="base-definition">
+		<put-attribute name="title" value="Gallery" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/gallery/GalleryByGenrePage.jsp" />
+	</definition>
+	
 	<definition name="SearchResultPage" extends="base-definition">
 		<put-attribute name="title" value="Search" />
 		<put-attribute name="body"
@@ -153,10 +161,17 @@
 		<put-attribute name="title" value="About" />
 		<put-attribute name="body" value="/WEB-INF/views/jsp/AboutPage.jsp" />
 	</definition>
-	
+
 	<definition name="UserPanelPage" extends="base-definition">
 		<put-attribute name="title" value="User panel" />
-		<put-attribute name="body" value="/WEB-INF/views/jsp/panel/UserPanelPage.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/UserPanelPage.jsp" />
+	</definition>
+
+	<definition name="UserRoleEditorPage" extends="base-definition">
+		<put-attribute name="title" value="Role editor page" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/jsp/panel/UserRoleEditorPage.jsp" />
 	</definition>
 
 </tiles-definitions>

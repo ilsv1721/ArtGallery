@@ -86,4 +86,9 @@ public class Genre {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Genre [genre=" + genre + "]";
+	}
+
 }

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -14,16 +13,12 @@ public class UserDetailsDto implements UserDetails {
 
 	private static final long serialVersionUID = -5926439103551082853L;
 
-	@NotNull
 	@Size(min = 1, max = 20, message = "{firstname.size}")
 	private String firstName;
-	@NotNull
 	@Size(min = 1, max = 20, message = "{lastname.size}")
 	private String lastName;
-	@NotNull
 	@Size(min = 1, max = 20, message = "{password.size}")
 	private String password;
-	@NotNull
 	@Size(min = 1, max = 20, message = "{email.size}")
 	private String email;
 	private Set<? extends GrantedAuthority> authorities = new HashSet<>();

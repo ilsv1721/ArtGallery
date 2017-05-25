@@ -40,6 +40,9 @@
 				class="w3-bar-item w3-button">Random</a> <a
 				href="<c:url value="/gallery/byExhibition"/>"
 				class="w3-bar-item w3-button">By Exhibition</a>
+				<a
+				href="<c:url value="/gallery/byGenre"/>"
+				class="w3-bar-item w3-button">By Genre</a>
 		</div>
 
 	</div>

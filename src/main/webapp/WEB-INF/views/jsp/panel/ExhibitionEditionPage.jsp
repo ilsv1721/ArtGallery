@@ -8,7 +8,11 @@
 	var cstok = '${_csrf.token}';
 	var cshead = '${_csrf.headerName}';
 
-	$(document).ready(function() {$("#deleteButton").click(
+	$(document)
+			.ready(
+					function() {
+						$("#deleteButton")
+								.click(
 										function() {
 											var r = confirm("Are you sure you want to delete this Exhibition?");
 											if (r == true) {
@@ -33,8 +37,6 @@
 																alert(result);
 															},
 															error : function(e) {
-																console
-																		.log(e.responseText);
 															}
 														});
 											} else {
@@ -43,6 +45,23 @@
 
 										});
 
+						$('#exhibAn').validate({
+							onkeyup : false,
+							onfocusout : false,
+							onclick : false,
+							rules : {
+								title : {
+									required : true,
+									minlength : 2
+								},
+								description : {
+									required : true
+								}
+							},
+							submitHandler : function(form) {
+								form.submit();
+							}
+						});
 					});
 </script>
 
@@ -71,12 +90,13 @@
 			<tr>
 				<td><label><b>Start year</b></label> <sf:input
 						class="w3-input w3-border w3-hover-pale-blue"
-						path="startDate.year" /></td>
+						path="startDate.year" type="number" /></td>
 				<td><label><b>Start month</b></label> <sf:input
 						class="w3-input w3-border w3-hover-pale-blue"
-						path="startDate.month" /></td>
+						path="startDate.month" type="number" /></td>
 				<td><label><b>Start day</b></label> <sf:input
-						class="w3-input w3-border w3-hover-pale-blue" path="startDate.day" /></td>
+						class="w3-input w3-border w3-hover-pale-blue" path="startDate.day"
+						type="number" /></td>
 
 			</tr>
 		</table>
@@ -85,11 +105,14 @@
 		<table style="width: 100%">
 			<tr>
 				<td><label><b>End year</b></label> <sf:input
-						class="w3-input w3-border w3-hover-pale-blue" path="endDate.year" /></td>
+						class="w3-input w3-border w3-hover-pale-blue" path="endDate.year"
+						type="number" /></td>
 				<td><label><b>End month</b></label> <sf:input
-						class="w3-input w3-border w3-hover-pale-blue" path="endDate.month" /></td>
+						class="w3-input w3-border w3-hover-pale-blue" path="endDate.month"
+						type="number" /></td>
 				<td><label><b>End day</b></label> <sf:input
-						class="w3-input w3-border w3-hover-pale-blue" path="endDate.day" /></td>
+						class="w3-input w3-border w3-hover-pale-blue" path="endDate.day"
+						type="number" /></td>
 
 			</tr>
 		</table>

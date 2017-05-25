@@ -11,10 +11,6 @@ public interface NewsService extends EntityMetaURLMappable {
 
 	List<NewsDto> getAscOrderedNews();
 
-	News findByTitle(String title);
-
-	News findLastDateNews();
-
 	void deleteNewsById(long id);
 
 	void editNews(NewsDto newsDto);
@@ -22,5 +18,9 @@ public interface NewsService extends EntityMetaURLMappable {
 	void persistNews(NewsDto newsDto);
 
 	NewsDto getNewsAsNewsDtoById(long id);
+
+	News getById(Long id);
+
+	News getNewsByTitle(String title);
 
 }

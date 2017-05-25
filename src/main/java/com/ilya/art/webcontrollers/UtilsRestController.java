@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ilya.art.dto.ExhibitionTitileAndIdDto;
 import com.ilya.art.dto.PaintingDto;
 import com.ilya.art.services.interfaces.ExhibitionService;
+import com.ilya.art.services.interfaces.GenreService;
 import com.ilya.art.services.interfaces.PaintingService;
 import com.ilya.art.services.interfaces.UserService;
 
@@ -25,8 +26,10 @@ public class UtilsRestController {
 	UserService userService;
 
 	@Autowired
-
 	PaintingService paintingService;
+
+	@Autowired
+	GenreService genreService;
 
 	@RequestMapping(value = "/exhibitionsTitlesAndIds")
 	List<ExhibitionTitileAndIdDto> getAllExhibitionsTitleAndId() {
@@ -41,6 +44,11 @@ public class UtilsRestController {
 	@RequestMapping(value = "/paintingsByExhibition", method = RequestMethod.GET)
 	public List<PaintingDto> getPaintingsSrcByExhibitionId(@RequestParam Long exhibitionId) {
 		return exhibitionService.getPaintingsOfExhibition(exhibitionId);
+	}
+
+	@RequestMapping(value = "/paintingsByGenre", method = RequestMethod.GET)
+	public List<PaintingDto> getPaintingsSrcByGenreId(@RequestParam Long genreId) {
+		return genreService.getAllPaintingsWithThisGenre(genreId);
 	}
 
 	@RequestMapping(value = "/validateExistEmail", method = RequestMethod.GET)

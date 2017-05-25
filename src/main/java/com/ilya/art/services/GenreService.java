@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.Genre;
+import com.ilya.art.domain.Painting;
 import com.ilya.art.dto.GenreDto;
 import com.ilya.art.dto.GenreEditDto;
+import com.ilya.art.dto.PaintingDto;
 import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.GenreDao;
 import com.ilya.art.repositories.interfaces.PaintingDao;
@@ -28,27 +30,46 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 	@Autowired
 	PaintingDao paintDao;
 
+	private static Logger logger = LogManager.getLogger(GenreService.class);
+
 	@Override
-	public void addNewGenre(GenreDto genre) {
+	public Genre getByid(Long id) {
 		try {
-			genreDao.findByGenreString(genre.getGenre());
-			throw new EntityExistsException();
-		} catch (NoResultException ex) {
-			Genre genre1 = new Genre(genre.getGenre());
-			genreDao.persist(genre1);
+			Genre genre = genreDao.getById(id);
+			return genre;
+		} catch (NotFoundException ex) {
+			logger.error("NotFoundException :: while trying to fing genre with id" + id);
+			throw new NotFoundException();
 		}
 
 	}
 
 	@Override
-	public void editGenre(GenreEditDto genreDto) {
+	public Genre getByGenreString(String genrestring) {
 		try {
-			Genre genreToChange = genreDao.findByGenreString(genreDto.getGenre());
-			genreToChange.setGenre(genreDto.getNewValue());
-		} catch (NoResultException ex) {
-			throw new EntityNotFoundException();
+			Genre genre = genreDao.findByGenreString(genrestring);
+			return genre;
+		} catch (NotFoundException ex) {
+			logger.error("NotFoundException :: while trying to fing genre " + genrestring);
+			throw new NotFoundException();
 		}
 
+	}
+
+	@Override
+	public void addNewGenre(GenreDto genre) {
+		if (validateExist(genre)) {
+			logger.error("Dupplicate role " + genre.getGenre());
+			throw new EntityExistsException();
+		} else {
+			genreDao.persist(new Genre(genre.getGenre()));
+		}
+	}
+
+	@Override
+	public void editGenre(GenreEditDto genreDto) {
+		Genre genreToChange = getByGenreString(genreDto.getGenre());
+		genreToChange.setGenre(genreDto.getNewValue());
 	}
 
 	@Override
@@ -65,23 +86,18 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 		try {
 			genreDao.findByGenreString(genreDto.getGenre());
 			return true;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return false;
 		}
 	}
 
 	@Override
 	public void deleteGenre(GenreDto genre) {
-		try {
-			Genre genreToDelete = genreDao.findByGenreString(genre.getGenre());
-			genreToDelete.getPaintingsWithThisGenre().forEach((paint) -> {
-				paint.getGenre().remove(genreToDelete);
-			});
-			genreDao.remove(genreToDelete);
-		} catch (NoResultException ex) {
-			throw new EntityNotFoundException();
-
-		}
+		Genre genreToDelete = getByGenreString(genre.getGenre());
+		genreToDelete.getPaintingsWithThisGenre().forEach((paint) -> {
+			paint.getGenre().remove(genreToDelete);
+		});
+		genreDao.remove(genreToDelete);
 
 	}
 
@@ -89,13 +105,25 @@ public class GenreService implements com.ilya.art.services.interfaces.GenreServi
 	public List<GenreDto> getGenreOfPainting(long paintingId) {
 		List<GenreDto> list = new ArrayList<>();
 		try {
-			paintDao.getById(paintingId).getGenre().forEach((genre) -> {
+			Painting paint = paintDao.getById(paintingId);
+			paint.getGenre().forEach((genre) -> {
 				list.add(new GenreDto(genre));
 			});
 			return list;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
+			logger.error(ex.getClass().getName() + "  :: while trying to get genres of painting winth painting id "
+					+ paintingId);
 			throw new NotFoundException();
 		}
+
 	}
 
+	@Override
+	public List<PaintingDto> getAllPaintingsWithThisGenre(long genreId) {
+		List<PaintingDto> list = new ArrayList<>();
+		genreDao.getById(genreId).getPaintingsWithThisGenre().forEach((painting) -> {
+			list.add(new PaintingDto(painting));
+		});
+		return list;
+	}
 }

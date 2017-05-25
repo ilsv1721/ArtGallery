@@ -1,10 +1,10 @@
 package com.ilya.art.services;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.NoResultException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,15 +46,39 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 	UserDao userDao;
 
 	@Override
-	public Exhibition findExhibition(String title) {
+	public Exhibition getById(Long id) {
+		try {
+			Exhibition ex = exDao.getById(id);
+			ex.getPaintings().iterator();
+			return ex;
+		} catch (NotFoundException ex) {
+			logger.error(ex.getClass().getName() + ":: Ocured while trying to find exhibition with id " + id);
+			throw ex;
+		}
+
+	}
+
+	@Override
+	public Exhibition getByTitle(String title) {
 		try {
 			Exhibition ex = exDao.findExhibition(title);
 			ex.getPaintings().iterator();
 			return ex;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			logger.error(ex.getClass().getName() + ":: Ocured while trying to find exhibition with title" + title);
 			throw new ExhibitionNotFoundException(title);
 		}
+	}
+
+	@Override
+	public ExhibitionDto findExhibition(Long id) {
+		return new ExhibitionDto(getById(id));
+	}
+
+	@Override
+	public ExhibitionDto findExhibition(String title) {
+		return new ExhibitionDto(getByTitle(title));
+
 	}
 
 	@Override
@@ -66,7 +90,7 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 	public List<UrlEntityMapper> getUrlEntityFieldAssistantMatchers() {
 		List<UrlEntityMapper> list = new ArrayList<>();
 		getAllExhibition().forEach((exhibition) -> {
-			list.add(new BasicUrlEnityMapperDto(exhibition.getTitle()));
+			list.add(new BasicUrlEnityMapperDto(exhibition.getTitle(), Long.toString(exhibition.getId())));
 		});
 		return list;
 	}
@@ -85,34 +109,27 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 
 	@Override
 	public void editExhibition(ExhibitionDto exhibAnounceDTO) {
-		try {
-			Exhibition exib = exDao.getById(exhibAnounceDTO.getId());
-			exib.setDescription(exhibAnounceDTO.getDescription());
-			exib.setTitle(exhibAnounceDTO.getTitle());
-			exib.setStarts(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getStartDate()));
-			exib.setEnds(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getEndDate()));
-			exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getUser().getEmail()));
-		} catch (NoResultException ex) {
-			logger.error(ex.getClass().getName() + " while editiing exhibition with id = " + exhibAnounceDTO.getId());
-			throw new NotFoundException();
-		}
+		Exhibition exib = getById(exhibAnounceDTO.getId());
+		exib.setDescription(exhibAnounceDTO.getDescription());
+		exib.setTitle(exhibAnounceDTO.getTitle());
+		exib.setStarts(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getStartDate()));
+		exib.setEnds(DateDtoDateJavaConverter.convert(exhibAnounceDTO.getEndDate()));
+		exib.setAnnouncedBy(userDao.findByEmail(exhibAnounceDTO.getUser().getEmail()));
 	}
 
-	@Override
-	public ExhibitionDto getExhibitionEditionDto(String title) {
-		return new ExhibitionDto(this.findExhibition(title));
-
-	}
-
-	@Override
-	public ExhibitionDto getExhibitionEditionDto(Long id) {
-		return new ExhibitionDto(exDao.getById(id));
-	}
-
-	// redo
 	@Override
 	public void deleteExhibition(Long id) {
-		Exhibition exhib = exDao.getById(id);
+		Exhibition exhib = getById(id);
+		exhib.getPaintings().forEach((paint) -> {
+			if (paint.getExhibitions().size() == 1) {
+				try {
+					pathAndFileAssistant
+							.deleteFile(Paths.get(localStorageProps.getLocalStoragePathExhibs() + paint.getPath()));
+				} catch (IOException ex) {
+					logger.error(ex.getClass().getName() + " while trying to delete painting by id = " + id);
+				}
+			}
+		});
 		exDao.remove(exhib);
 	}
 
@@ -183,18 +200,6 @@ public class ExhibitionService implements com.ilya.art.services.interfaces.Exhib
 			}
 		});
 		return list;
-	}
-
-	@Override
-	public ExhibitionDto findExhibition(Long id) {
-		try {
-			Exhibition ex = exDao.getById(id);
-			ex.getPaintings().iterator();
-			return new ExhibitionDto(ex);
-		} catch (NoResultException ex) {
-			logger.error(ex.getClass().getName() + ":: Ocured while trying to find exhibition with id" + id);
-			throw new ExhibitionNotFoundException(Long.toString(id));
-		}
 	}
 
 	@Override

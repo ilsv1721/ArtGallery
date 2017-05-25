@@ -66,8 +66,11 @@
 							"${_csrf.headerName}" : "${_csrf.token}"
 						},
 						data : {
-							"id" : function() {
+							"paintId" : function() {
 								return $('#id').val();
+							},
+							"exhibitionId" : function() {
+								return $('#exibitionChooser').val();
 							}
 						},
 						success : function(result) {

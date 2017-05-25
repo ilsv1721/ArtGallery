@@ -6,10 +6,12 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -48,7 +50,8 @@ public class Exhibition {
 	@JoinColumn(name = "announced_by")
 	private User announcedBy;
 
-	@ManyToMany(mappedBy = "exhibitions")
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "paintings_exhibition", joinColumns = @JoinColumn(name = "exhibition_id"), inverseJoinColumns = @JoinColumn(name = "painting_id"))
 	private Set<Painting> Paintings = new HashSet<>();
 
 	public Exhibition() {
@@ -102,11 +105,21 @@ public class Exhibition {
 		this.title = title;
 	}
 
+	public Set<Painting> getPaintings() {
+		return Paintings;
+	}
+
+	public void setPaintings(Set<Painting> paintings) {
+		Paintings = paintings;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((announcedBy == null) ? 0 : announcedBy.hashCode());
+		result = prime * result + ((ends == null) ? 0 : ends.hashCode());
+		result = prime * result + ((starts == null) ? 0 : starts.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
@@ -120,10 +133,20 @@ public class Exhibition {
 		if (getClass() != obj.getClass())
 			return false;
 		Exhibition other = (Exhibition) obj;
-		if (description == null) {
-			if (other.description != null)
+		if (announcedBy == null) {
+			if (other.announcedBy != null)
 				return false;
-		} else if (!description.equals(other.description))
+		} else if (!announcedBy.equals(other.announcedBy))
+			return false;
+		if (ends == null) {
+			if (other.ends != null)
+				return false;
+		} else if (!ends.equals(other.ends))
+			return false;
+		if (starts == null) {
+			if (other.starts != null)
+				return false;
+		} else if (!starts.equals(other.starts))
 			return false;
 		if (title == null) {
 			if (other.title != null)
@@ -133,12 +156,10 @@ public class Exhibition {
 		return true;
 	}
 
-	public Set<Painting> getPaintings() {
-		return Paintings;
-	}
-
-	public void setPaintings(Set<Painting> paintings) {
-		Paintings = paintings;
+	@Override
+	public String toString() {
+		return "Exhibition [starts=" + starts + ", ends=" + ends + ", description=" + description + ", title=" + title
+				+ ", announcedBy=" + announcedBy + "]";
 	}
 
 }

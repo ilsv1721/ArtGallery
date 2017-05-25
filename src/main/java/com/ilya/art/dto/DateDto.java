@@ -7,14 +7,15 @@ public class DateDto implements Serializable {
 	private static final long serialVersionUID = 132532682520489634L;
 
 	private int year;
+
 	private int month;
+
 	private int day;
 
 	public DateDto() {
 	}
 
 	public DateDto(int day, int month, int year) {
-		super();
 		this.year = year;
 		this.month = month;
 		this.day = day;

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.NoResultException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ilya.art.domain.Role;
 import com.ilya.art.dto.RoleDto;
 import com.ilya.art.dto.RoleEditDto;
+import com.ilya.art.exceptions.NotFoundException;
 import com.ilya.art.repositories.interfaces.RoleDao;
 
 @Service
@@ -29,10 +28,10 @@ public class RoleService implements com.ilya.art.services.interfaces.RoleService
 
 	@Override
 	public void addNewRole(RoleDto roleDto) {
-		try {
-			roleDao.getRole(roleDto.getRole());
+		if (validateExist(roleDto)) {
+			logger.error("Dupplicate role " + roleDto.getRole());
 			throw new EntityExistsException();
-		} catch (NoResultException ex) {
+		} else {
 			roleDao.persist(new Role(roleDto.getRole()));
 		}
 	}
@@ -45,9 +44,9 @@ public class RoleService implements com.ilya.art.services.interfaces.RoleService
 				user.getRoles().remove(roleToDelete);
 			});
 			roleDao.remove(roleToDelete);
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			logger.error(ex.getClass().getName() + " while trying to delte role with id =" + roleDto.getId());
-			throw new EntityNotFoundException();
+			throw new NotFoundException();
 
 		}
 
@@ -58,17 +57,17 @@ public class RoleService implements com.ilya.art.services.interfaces.RoleService
 		try {
 			Role editRole = roleDao.getRole(editRoleDto.getRole());
 			editRole.setAuthority(editRoleDto.getNewValue());
-		} catch (NoResultException ex) {
-			throw new EntityNotFoundException();
+		} catch (NotFoundException ex) {
+			throw new NotFoundException();
 		}
 	}
 
 	@Override
-	public boolean validateExist(RoleDto genreDto) {
+	public boolean validateExist(RoleDto roleDto) {
 		try {
-			roleDao.getRole(genreDto.getRole());
+			roleDao.getRole(roleDto.getRole());
 			return true;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return false;
 		}
 	}

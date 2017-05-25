@@ -1,8 +1,12 @@
 package com.ilya.art.services;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.NoResultException;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.EntityExistsException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ilya.art.domain.User;
+import com.ilya.art.dto.RoleDto;
 import com.ilya.art.dto.UserDetailsDto;
 import com.ilya.art.dto.UserDto;
 import com.ilya.art.exceptions.NotFoundException;
@@ -22,6 +27,8 @@ import com.ilya.art.repositories.interfaces.UserDao;
 public class UserService implements com.ilya.art.services.interfaces.UserService {
 
 	static public String DEFFAULT_ROLE = "ROLE_USER";
+
+	private static Logger logger = LogManager.getLogger(UserService.class);
 
 	@Autowired
 	UserDao userDao;
@@ -56,7 +63,7 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 		try {
 			userDao.findByEmail(emailString);
 			return false;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return true;
 		}
 	}
@@ -66,7 +73,7 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 		try {
 			userDao.findByEmail(emailString);
 			return true;
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			return false;
 		}
 	}
@@ -75,7 +82,8 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 	public UserDto getUserDtoByEmail(String email) {
 		try {
 			return new UserDto(userDao.findByEmail(email));
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
+			logger.error(ex.getClass().getName() + " :: while trying to get userdto woith email " + email);
 			throw new NotFoundException();
 		}
 	}
@@ -85,7 +93,7 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 		try {
 			User userToChange = userDao.getById(userId);
 			userToChange.setPassword(passwordEncoder.encode(newPassword));
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			throw new NotFoundException();
 		}
 	}
@@ -95,7 +103,7 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 		try {
 			User userToChange = userDao.findByEmail(userEmail);
 			userToChange.setPassword(passwordEncoder.encode(newPassword));
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			throw new NotFoundException();
 		}
 	}
@@ -106,8 +114,36 @@ public class UserService implements com.ilya.art.services.interfaces.UserService
 			User userToChange = userDao.getById(userDto.getId());
 			userToChange.setFirstName(userDto.getFirstName());
 			userToChange.setLastName(userDto.getLastName());
-		} catch (NoResultException ex) {
+		} catch (NotFoundException ex) {
 			throw new NotFoundException();
+		}
+	}
+
+	@Override
+	public List<RoleDto> getUserRoles(Long userId) {
+		List<RoleDto> roles = new ArrayList<>();
+		userDao.getById(userId).getRoles().forEach((role) -> {
+			roles.add(new RoleDto(role));
+		});
+		return roles;
+	}
+
+	@Override
+	public List<RoleDto> getUserRoles(String userEmail) {
+		List<RoleDto> roles = new ArrayList<>();
+		userDao.findByEmail(userEmail).getRoles().forEach((role) -> {
+			roles.add(new RoleDto(role));
+		});
+		return roles;
+
+	}
+
+	@Override
+	public void chageRole(String userEmail, List<Long> roles) {
+		User userToEdit = userDao.findByEmail(userEmail);
+		userToEdit.getRoles().clear();
+		for (Long roleId : roles) {
+			userToEdit.getRoles().add(roleDao.getById(roleId));
 		}
 	}
 

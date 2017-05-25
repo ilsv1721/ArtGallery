@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+
 import com.ilya.art.domain.Exhibition;
 import com.ilya.art.dto.converters.DateDtoDateJavaConverter;
 
@@ -13,9 +15,11 @@ public class ExhibitionDto implements Serializable {
 
 	private UserDto user;
 	private long id;
+	@Size(min = 1, max = 20)
 	private String title;
 	private DateDto startDate;
 	private DateDto endDate;
+	@Size(min = 1)
 	private String description;
 	private List<PaintingDto> paints = new ArrayList<>();
 

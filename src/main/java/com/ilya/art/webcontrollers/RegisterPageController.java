@@ -38,6 +38,7 @@ public class RegisterPageController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String processRegistr(@Valid @ModelAttribute UserDetailsDto userDetailsDto, BindingResult res) {
+		System.out.println("dsa");
 		if (res.hasErrors()) {
 			return "RegisterPage";
 		} else {

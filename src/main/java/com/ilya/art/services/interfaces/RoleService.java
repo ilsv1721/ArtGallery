@@ -12,13 +12,10 @@ public interface RoleService {
 
 	void editGenre(RoleEditDto genreEditDto);
 
-	/**
-	 * 
-	 * @param genre
-	 * @return true - if exist; false - duplicate
-	 */
 	boolean validateExist(RoleDto genreDto);
 
 	List<RoleDto> getAllDto();
+	
+	
 
 }
