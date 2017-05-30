@@ -17,4 +17,12 @@ public class HomePageControllerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.view().name("HomePage"));
 	}
 
+	@Test
+	public void testAboutPage() throws Exception {
+		HomePageController controller = new HomePageController();
+		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+		mockMvc.perform(MockMvcRequestBuilders.get("/about")).andExpect(MockMvcResultMatchers.view().name("AboutPage"));
+
+	}
+
 }

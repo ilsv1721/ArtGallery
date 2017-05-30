@@ -26,7 +26,7 @@
 	<div class="w3-row">
 		<a href="javascript:void(0)" onclick="opentab(event, 'Past');">
 			<div
-				class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Past(click me)</div>
+				class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Past</div>
 		</a> <a href="javascript:void(0)" onclick="opentab(event, 'Current');">
 			<div
 				class="w3-third tablink w3-bottombar w3-hover-light-grey w3-padding">Current</div>
